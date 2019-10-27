@@ -4,18 +4,31 @@ namespace App\Controller\Front;
 
 use App\Entity\User;
 use App\Form\Front\RegistrationFormType;
+use App\Mailer\Mailer;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\Translation\TranslatorInterface;
 
 class RegistrationController extends AbstractController
 {
+
     /**
-     * @Route("/register", name="app_register")
+     * @var TranslatorInterface
      */
-    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
+    private $translator;
+
+    public function __construct(TranslatorInterface $translator)
+    {
+        $this->translator = $translator;
+    }
+    
+    /**
+     * @Route("/register", name="front_register")
+     */
+    public function register(Request $request, UserPasswordEncoderInterface $passwordEncoder, Mailer $mailer): Response
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
@@ -30,17 +43,24 @@ class RegistrationController extends AbstractController
                 )
             );
 
+            $user->setEnabled(false);
+            $user->setConfirmationToken(random_bytes(24));
+            $user->setLastLoginAt(new \DateTime());
+            
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // do anything else you need here, like send an email
+            $mailer->sendRegistration($user);
+
+            $msg = $this->translator->trans('registration.flash.check_email', [ '%email%' => $user->getEmail(), ], 'security');
+            $this->addFlash('info', $msg);
 
             return $this->redirectToRoute('app_login');
         }
 
         return $this->render('front/registration/register.html.twig', [
-            'registrationForm' => $form->createView(),
+            'form' => $form->createView(),
         ]);
     }
 }
