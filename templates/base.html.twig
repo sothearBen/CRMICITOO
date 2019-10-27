@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0,shrink-to-fit=no">
+        <meta name="author" content="Martin GILBERT">
+        <title>{% block title %}{{ 'DevFusion' }}{% endblock %}</title>
+        <meta name="description" content="{% block description %}{{ '' }}{% endblock %}" />
+        <link rel="icon" type="image/png" href="{{ asset('build/images/favicon.png')}}" />
         {% block stylesheets %}{% endblock %}
     </head>
-    <body>
-        {% block body %}{% endblock %}
-        {% block javascripts %}{% endblock %}
-    </body>
+    {% block body %}{% endblock %}
 </html>
