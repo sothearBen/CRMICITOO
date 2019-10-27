@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Front;
 
 use App\Entity\User;
-use App\Form\RegistrationFormType;
+use App\Form\Front\RegistrationFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -39,7 +39,7 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('registration/register.html.twig', [
+        return $this->render('front/registration/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
     }
