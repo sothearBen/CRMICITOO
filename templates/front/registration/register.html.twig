@@ -1,15 +1,30 @@
-{% extends 'base.html.twig' %}
+{% trans_default_domain 'security' %}
+{% extends 'front/layout.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}{{ 'registration.title'|trans() }}{% endblock %}
 
-{% block body %}
-    <h1>Register</h1>
-
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.email) }}
-        {{ form_row(registrationForm.plainPassword) }}
-        {{ form_row(registrationForm.agreeTerms) }}
-
-        <button class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+{% block content %}
+<section class="pt-4 pb-4">
+    <div class="container">
+        <div class="col-lg-6 mx-auto">
+            <div class="card mt-4 mb-4">
+                <div class="card-body">
+                    {{ form_start(form) }}
+                        <h1 class="h3 mb-3 font-weight-normal">{{ 'registration.h1'|trans() }}</h1>
+                        {{ form_row(form.email) }}
+                        {{ form_row(form.firstname) }}
+                        {{ form_row(form.lastname) }}
+                        {{ form_row(form.plainPassword) }}
+                        {{ form_row(form.agreeTerms) }}
+                        <div class="form-group text-center">
+                            <button class="btn btn-primary btn-block" type="submit">
+                                {{ 'registration.btn.submit'|trans() }}
+                            </button>
+                        </div>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}
