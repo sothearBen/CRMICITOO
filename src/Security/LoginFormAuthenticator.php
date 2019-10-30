@@ -96,6 +96,10 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         }
 
         $user = $token->getUser();
+        
+        $user->setLastLoginAt(new \DateTime());
+        $this->entityManager->flush();
+        
         $msg = $this->translator->trans('login.message.welcome', ['%user%' => $user ], 'security');
         $this->session->getFlashBag()->add('success', $msg);
         
