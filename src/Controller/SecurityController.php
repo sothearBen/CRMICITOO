@@ -83,4 +83,88 @@ class SecurityController extends AbstractController
             'main' // firewall name in security.yaml
         );
     }
+    
+    /**
+     * @Route("/forget_password", name="app_forget_password")
+     */
+    public function forgetPassword(Request $request, UserRepository $userRepository, Mailer $mailer): Response
+    {
+        $form = $this->createForm(ForgetPasswordFormType::class);
+        $form->handleRequest($request);
+        
+        if ($form->isSubmitted() && $form->isValid()) {
+            $user = $userRepository->findOneByEmail($form->get('email')->getData());
+            if ($user) {
+                $user->setConfirmationToken(random_bytes(24));
+                $this->getDoctrine()->getManager()->flush();
+                $mailer->sendForgetPassword($user);
+                $msg = $this->translator->trans('forget_password.flash.check_email', [ '%user%' => $user, ], 'security');
+                $this->addFlash('success', $msg);
+            }
+            return $this->redirectToRoute('front_home');
+        }
+        return $this->render('security/forget_password.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/reset_password/{id}", defaults={"id"=null}, name="app_reset_password")
+     */
+    public function resetPassword(
+        Request $request,
+        UserRepository $userRepository,
+        UserPasswordEncoderInterface $passwordEncoder,
+        GuardAuthenticatorHandler $guardHandler,
+        LoginFormAuthenticator $authenticator,
+        User $user=null
+    ): response {
+        $token = $request->query->get('token');
+        if ($token) {
+            $user = $userRepository->findOneByConfirmationToken($token);
+            if (null === $user) {
+                throw $this->createNotFoundException(sprintf('The user with confirmation token "%s" does not exist', $token));
+            }
+        } elseif ($user) {
+            // require the user to log in during *this* session
+            // if they were only logged in via a remember me cookie, they
+            // will be redirected to the login page
+            if (!$this->isGranted('IS_AUTHENTICATED_FULLY')) {
+                $msg = $this->translator->trans('message.reset_password_reconnect', [], 'security');
+                $this->addFlash('info', $msg);
+                $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
+            }
+        } else {
+            throw new LogicException("No user selected.");
+        }
+        $form = $this->createForm(ResetPasswordFormType::class, null, [
+            'with_token' => null !== $token,
+        ]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            // encode the plain password
+            $user->setPassword(
+                $passwordEncoder->encodePassword(
+                    $user,
+                    $form->get('plainPassword')->getData()
+                )
+            );
+            if ($token) {
+                $user->setConfirmationToken(null);
+            }
+            $this->getDoctrine()->getManager()->flush();
+            $msg = $this->translator->trans('reset_password.flash.success', [], 'security');
+            $this->addFlash('info', $msg);
+            return $guardHandler->authenticateUserAndHandleSuccess(
+                $user,
+                $request,
+                $authenticator,
+                'main' // firewall name in security.yaml
+            );
+        }
+        return $this->render('security/reset_password.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
 }
