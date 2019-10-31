@@ -93,7 +93,8 @@ class SecurityController extends AbstractController
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $userRepository->findOneByEmail($form->get('email')->getData());
+            $user = $userRepository
+                ->findOneByEmail($form->get('email')->getData());
             if ($user) {
                 $user->setConfirmationToken(random_bytes(24));
                 $this->getDoctrine()->getManager()->flush();
@@ -125,16 +126,7 @@ class SecurityController extends AbstractController
             if (null === $user) {
                 throw $this->createNotFoundException(sprintf('The user with confirmation token "%s" does not exist', $token));
             }
-        } elseif ($user) {
-            // require the user to log in during *this* session
-            // if they were only logged in via a remember me cookie, they
-            // will be redirected to the login page
-            if (!$this->isGranted('IS_AUTHENTICATED_FULLY')) {
-                $msg = $this->translator->trans('message.reset_password_reconnect', [], 'security');
-                $this->addFlash('info', $msg);
-                $this->denyAccessUnlessGranted('IS_AUTHENTICATED_FULLY');
-            }
-        } else {
+        } elseif (!$user) {
             throw new LogicException("No user selected.");
         }
         $form = $this->createForm(ResetPasswordFormType::class, null, [
