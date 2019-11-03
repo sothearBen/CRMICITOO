@@ -62,12 +62,12 @@ class Mailer
         $subject = $this->translator->trans('registration.email.subject', [ '%user%' => $user ], 'security');
         $template = 'front/email/register.html.twig';
         $from = [
-            $this->parameters->get('configuration.from_email') => $this->parameters->get('configuration.name'),
+            $this->parameters->get('configuration')['from_email'] => $this->parameters->get('configuration')['name'],
         ];
         $to = $user->getEmail();
         $body = $this->templating->render($template, [
             'user' => $user,
-            'website_name' => $this->parameters->get('configuration.name'),
+            'website_name' => $this->parameters->get('configuration')['name'],
             'confirmation_url' => $url,
         ]);
         $message = (new \Swift_Message())
@@ -91,12 +91,12 @@ class Mailer
         $subject = $this->translator->trans('forget_password.email.subject', [], 'security');
         $template = 'security/email/forget_password.html.twig';
         $from = [
-            $this->parameters->get('configuration.from_email') => $this->parameters->get('configuration.name'),
+            $this->parameters->get('configuration')['from_email'] => $this->parameters->get('configuration')['name'],
         ];
         $to = $user->getEmail();
         $body = $this->templating->render($template, [
             'user' => $user,
-            'website_name' => $this->parameters->get('configuration.name'),
+            'website_name' => $this->parameters->get('configuration')['name'],
             'confirmation_url' => $url,
         ]);
         $message = (new \Swift_Message())

@@ -120,40 +120,24 @@ class SecurityController extends AbstractController
         LoginFormAuthenticator $authenticator,
         User $user=null
     ): response {
-        $token = $request->query->get('token');
-        if ($token) {
+        if ($token = $request->query->get('token')) {
             $user = $userRepository->findOneByConfirmationToken($token);
-            if (null === $user) {
-                throw $this->createNotFoundException(sprintf('The user with confirmation token "%s" does not exist', $token));
-            }
-        } elseif (!$user) {
-            throw new LogicException("No user selected.");
-        }
+            if (!$user) { throw $this->createNotFoundException(sprintf('The user with confirmation token "%s" does not exist', $token)); }
+        } elseif (!$user) { throw new LogicException("No user selected."); }
         $form = $this->createForm(ResetPasswordFormType::class, null, [
             'with_token' => null !== $token,
         ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password
-            $user->setPassword(
-                $passwordEncoder->encodePassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
+            $user->setPassword($passwordEncoder->encodePassword($user, $form->get('plainPassword')->getData()));
             if ($token) {
                 $user->setConfirmationToken(null);
             }
             $this->getDoctrine()->getManager()->flush();
             $msg = $this->translator->trans('reset_password.flash.success', [], 'security');
             $this->addFlash('info', $msg);
-            return $guardHandler->authenticateUserAndHandleSuccess(
-                $user,
-                $request,
-                $authenticator,
-                'main' // firewall name in security.yaml
-            );
+            return $guardHandler->authenticateUserAndHandleSuccess($user, $request, $authenticator, 'main');
         }
         return $this->render('security/reset_password.html.twig', [
             'form' => $form->createView(),

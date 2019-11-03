@@ -26,7 +26,7 @@ class ResetPasswordFormType extends AbstractType
                         ]),
                         new Length([
                             'min' => 6,
-                            'minMessage' => 'registration.message.length_min',
+                            'minMessage' => 'registration.message.password_length_min',
                             // max length allowed by Symfony for security reasons
                             'max' => 4096,
                         ]),
