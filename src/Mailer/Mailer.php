@@ -3,7 +3,7 @@
 namespace App\Mailer;
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Templating\EngineInterface;
+use Twig\Environment;
 use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use App\Entity\User;
@@ -41,7 +41,7 @@ class Mailer
      * Mailer constructor.
      *
      */
-    public function __construct(\Swift_Mailer $mailer, UrlGeneratorInterface $router, EngineInterface $templating, TranslatorInterface $translator, ParameterBagInterface $parameters)
+    public function __construct(\Swift_Mailer $mailer, UrlGeneratorInterface $router, Environment $templating, TranslatorInterface $translator, ParameterBagInterface $parameters)
     {
         $this->mailer = $mailer;
         $this->router = $router;
