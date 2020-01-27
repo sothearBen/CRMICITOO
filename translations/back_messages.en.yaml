@@ -1,0 +1,13 @@
+nav:
+    home: Home Front
+    end_switch: End switch
+    account: Account
+    account_login: Login
+    account_logout: Logout
+    account_profile: My profile
+    account_reset_password: Reset password
+sidebar:
+    home: Home Back
+    user: Utilisateur
+    user_search: List
+    user_create: Invite
