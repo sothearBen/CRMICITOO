@@ -1,3 +1,19 @@
+invitation:
+    email:
+        subject: '%website_name% - Invitation'
+        message: |
+            Hello %user%,
+
+            Email : %email%
+            Password : %password%
+            
+            To finish activating your account - please click <a href="%confirmation_url%">here</a>.
+
+            This link can only be used once to validate your account.
+
+            Regards,
+            
+            <a href="%host%">%website_name%</a>
 nav:
     home: Home Front
     end_switch: End switch

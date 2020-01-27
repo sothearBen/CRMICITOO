@@ -1,3 +1,20 @@
+invitation:
+    email:
+        subject: '%website_name% - Invitation'
+        message: |
+            Bonjour %user%,
+            
+            Vous avez été invité à rejoindre %website_name% par un administrateur.
+            
+            Identifiant : %email%
+            Mot de passe : %password%
+
+            Pour valider l'invitation, merci de cliquer <a href="%confirmation_url%">ici</a>.
+
+            Ce lien ne peut être utilisé qu'une seule fois pour valider votre compte.
+
+            Cordialement,
+            <a href="%host%">%website_name%</a>
 nav:
     home: Accueil Front
     end_switch: Fin de l'exploration
