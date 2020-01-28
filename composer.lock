@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "0a835ad6f9bd6834beb2b68987bbc5b1",
+    "content-hash": "f6446bbb00f59bd360b94e40f7334e58",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -6068,6 +6068,68 @@
     ],
     "packages-dev": [
         {
+            "name": "devfusion/maker-bundle",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/official-dev-fusion/MakerBundle.git",
+                "reference": "a65a4d77a015cfcfd4bf19a88205c42fb5e94783"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/official-dev-fusion/MakerBundle/zipball/a65a4d77a015cfcfd4bf19a88205c42fb5e94783",
+                "reference": "a65a4d77a015cfcfd4bf19a88205c42fb5e94783",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1",
+                "symfony/maker-bundle": "^1.0",
+                "symfony/twig-bundle": "^4.4"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "DF\\MakerBundle\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Martin GILBERT"
+                }
+            ],
+            "description": "This bundle is a code generation tool. It draws heavily on the symfony/maker-bundle by adding several features and more flexibility.",
+            "homepage": "https://github.com/official-dev-fusion/MakerBundle",
+            "keywords": [
+                "Skeleton",
+                "code generator",
+                "create",
+                "crud",
+                "delete",
+                "filter",
+                "generator",
+                "maker",
+                "multi-select",
+                "override",
+                "pagination",
+                "read",
+                "scrud",
+                "search",
+                "symfony",
+                "template",
+                "update"
+            ],
+            "time": "2020-01-28T02:50:48+00:00"
+        },
+        {
             "name": "easycorp/easy-log-handler",
             "version": "v1.0.9",
             "source": {
@@ -6755,7 +6817,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "devfusion/maker-bundle": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
