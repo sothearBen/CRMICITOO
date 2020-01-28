@@ -1,29 +1,87 @@
+action:
+    delete: Delete
+    update: Update
+button:
+    back: Back
+    cancel: Cancel
+    create: Add
+    delete: Delete
+    delete_title: Delete
+    filter: Filter
+    next: Next
+    previous: Previous
+    read_title: Details
+    submit: Submit
+    update_title: Update
+    validate: Validate
+delete:
+    confirm: 'Confirmation of deletion'
+    warning: 'The deletion will be final.'
+error:
+    no_element_selected: 'No element selected'
 invitation:
     email:
+        message: "Hello %user%,\n\nEmail : %email%\nPassword : %password%\n\nTo finish activating your account - please click <a href=\"%confirmation_url%\">here</a>.\n\nThis link can only be used once to validate your account.\n\nRegards,\n\n<a href=\"%host%\">%website_name%</a>\n"
         subject: '%website_name% - Invitation'
-        message: |
-            Hello %user%,
-
-            Email : %email%
-            Password : %password%
-            
-            To finish activating your account - please click <a href="%confirmation_url%">here</a>.
-
-            This link can only be used once to validate your account.
-
-            Regards,
-            
-            <a href="%host%">%website_name%</a>
+label:
+    filter_number_by_page: 'Number by page'
+    filter_search: Search
 nav:
-    home: Home Front
-    end_switch: End switch
     account: Account
     account_login: Login
     account_logout: Logout
-    account_profile: My profile
-    account_reset_password: Reset password
+    account_profile: 'My profile'
+    account_reset_password: 'Reset password'
+    end_switch: 'End switch'
+    home: 'Home Front'
+'no': 'No'
+search:
+    action_th: Action(s)
+    no_data_found: 'No data found'
 sidebar:
-    home: Home Back
+    home: 'Home Back'
     user: Utilisateur
-    user_search: List
     user_create: Invite
+    user_search: List
+user:
+    create:
+        flash:
+            success: 'User created (%identifier%).'
+        h1: 'Create - User'
+        h2: 'Create form'
+        title: 'Create - User'
+    delete:
+        flash:
+            success: 'User(s) deleted.'
+        h1: 'Delete - User'
+        h2: 'The following list will be deleted'
+        modal_title: 'Delete - User'
+    field:
+        created_at: 'Created At'
+        email: Email
+        enabled: Enabled
+        firstname: Firstname
+        last_login_at: 'Last Login At'
+        lastname: Lastname
+        roles: Roles
+        updated_at: 'Updated At'
+    label:
+        email: Email
+        firstname: Firstname
+        lastname: Lastname
+        roles: Roles
+    read:
+        h1: 'Details - User'
+        h2: Details
+        title: 'Details - User'
+    search:
+        h1: 'Search - User'
+        h2: Search
+        title: 'Search - User'
+    update:
+        flash:
+            success: 'User updated.'
+        h1: 'Update - User'
+        h2: 'Update form'
+        title: 'Update - User'
+'yes': 'Yes'

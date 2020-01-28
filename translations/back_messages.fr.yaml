@@ -1,30 +1,87 @@
+action:
+    delete: Supprimer
+    update: Modifier
+button:
+    back: Retour
+    cancel: Annuler
+    create: Ajouter
+    delete: Supprimer
+    delete_title: Supprimer
+    filter: Filtre
+    next: Suivant
+    previous: Précédent
+    read_title: Détails
+    submit: Soumettre
+    update_title: Modifier
+    validate: Valider
+delete:
+    confirm: 'Confirmation de la suppression'
+    warning: 'La suppression sera définitive.'
+error:
+    no_element_selected: 'Aucun élément sélectionné'
 invitation:
     email:
+        message: "Bonjour %user%,\n\nVous avez été invité à rejoindre %website_name% par un administrateur.\n\nIdentifiant : %email%\nMot de passe : %password%\n\nPour valider l'invitation, merci de cliquer <a href=\"%confirmation_url%\">ici</a>.\n\nCe lien ne peut être utilisé qu'une seule fois pour valider votre compte.\n\nCordialement,\n<a href=\"%host%\">%website_name%</a>\n"
         subject: '%website_name% - Invitation'
-        message: |
-            Bonjour %user%,
-            
-            Vous avez été invité à rejoindre %website_name% par un administrateur.
-            
-            Identifiant : %email%
-            Mot de passe : %password%
-
-            Pour valider l'invitation, merci de cliquer <a href="%confirmation_url%">ici</a>.
-
-            Ce lien ne peut être utilisé qu'une seule fois pour valider votre compte.
-
-            Cordialement,
-            <a href="%host%">%website_name%</a>
+label:
+    filter_number_by_page: 'Nombre d''élément par page'
+    filter_search: Rechercher
 nav:
-    home: Accueil Front
-    end_switch: Fin de l'exploration
     account: Compte
     account_login: Connexion
     account_logout: Déconnection
-    account_profile: Mes informations
-    account_reset_password: Modifier le mot de passe
+    account_profile: 'Mes informations'
+    account_reset_password: 'Modifier le mot de passe'
+    end_switch: 'Fin de l''exploration'
+    home: 'Accueil Front'
+'no': Non
+search:
+    action_th: Action(s)
+    no_data_found: 'Aucune donnée n''a été trouvée'
 sidebar:
-    home: Accueil Back
+    home: 'Accueil Back'
     user: Utilisateur
-    user_search: Liste
     user_create: Inviter
+    user_search: Liste
+user:
+    create:
+        flash:
+            success: 'User créé (%identifier%).'
+        h1: 'Créer - User'
+        h2: 'Formulaire de création'
+        title: 'Créer - User'
+    delete:
+        flash:
+            success: 'User(s) supprimé.'
+        h1: 'Supprimer - User'
+        h2: 'La liste suivante sera supprimée'
+        modal_title: 'Supprimer - User'
+    field:
+        created_at: 'Created At'
+        email: Email
+        enabled: Enabled
+        firstname: Firstname
+        last_login_at: 'Last Login At'
+        lastname: Lastname
+        roles: Roles
+        updated_at: 'Updated At'
+    label:
+        email: Email
+        firstname: Firstname
+        lastname: Lastname
+        roles: Roles
+    read:
+        h1: 'Détails - User'
+        h2: Détails
+        title: 'Détails - User'
+    search:
+        h1: 'Rechercher - User'
+        h2: Rechercher
+        title: 'Rechercher - User'
+    update:
+        flash:
+            success: 'User modifié.'
+        h1: 'Modifier - User'
+        h2: 'Formulaire de modification'
+        title: 'Modifier - User'
+'yes': Oui
