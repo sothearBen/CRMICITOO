@@ -45,18 +45,27 @@
                                     <i class="fas fa-file-alt"></i>
                                 </a>
                             {% endif %}
-                            {% if can_update %}
+                            {% if can_update not user.hasRole("ROLE_SUPER_ADMIN") %}
                                 <a href="{{ path('back_user_update', {'id': user.id}) }}" title="{{ 'button.update_title'|trans() }}"
                                     class="btn btn-warning" aria-label="{{ 'button.update_title'|trans() }}" role="button">
                                     <i class="fas fa-edit"></i>
                                 </a>
                             {% endif %}
-                            {% if can_delete %}
+                            {% if can_delete and not user.hasRole("ROLE_SUPER_ADMIN") %}
                                 <a href="#" class="btn btn-danger btn-delete" data-toggle="modal" data-target="#delete"
-                                    data-title="{{ user }}" role="button"
+                                    data-title="{{ user }}"  role="button"
                                     data-path="{{ path('back_user_delete', { 'ids': {0: user.id}}) }}"
                                     title="{{ 'button.delete_title'|trans() }}" aria-label="{{ 'button.delete_title'|trans() }}">
                                     <i class="fas fa-times"></i>
+                                </a>
+                            {% endif %}
+                            {% if not user.hasRole("ROLE_SUPER_ADMIN") and is_granted("ROLE_ALLOWED_TO_SWITCH") %}
+                                {% set switch_path = path('front_home', { 'id': user.id, '_switch_user': user.email }) %}
+                                <a href="{{ switch_path }}"
+                                    class="btn btn-primary{{ is_granted('ROLE_PREVIOUS_ADMIN') ? ' disabled' : '' }}" role="button"
+                                    aria-disabled="{{ is_granted('ROLE_PREVIOUS_ADMIN') ? 'true' : 'false' }}"
+                                    title="{{ 'button.switch'|trans() }}" aria-label="{{ 'button.switch'|trans() }}">
+                                    <i class="fas fa-user"></i>
                                 </a>
                             {% endif %}
                         </td>
@@ -64,7 +73,14 @@
                         <td>{{ user.lastname }}</td>
                         <td><a href="mailto:{{ user.email }}">{{ user.email }}</a></td>
                         <td>{{ user.roles ? user.roles|join(', ') : '' }}</td>
-                        <td>{{ user.enabled ? 'yes'|trans : 'no'|trans }}</td>
+                        <td>
+                            <a href="{{ path('back_user_permute_enabled', { 'ids': {0: user.id}}) }}" role="button"
+                                class="btn btn-primary{{ user.enabled ? ' active' : '' }}{{ user.hasRole("ROLE_SUPER_ADMIN") ? ' disabled' : '' }}"
+                                aria-pressed="{{ user.enabled ? 'true' : 'false' }}"
+                                aria-disabled="{{ user.hasRole("ROLE_SUPER_ADMIN") ? 'true' : 'false' }}">
+                                <span>{{ user.enabled ? 'button.disable'|trans : 'button.enable'|trans }}</span>
+                            </a>
+                        </td>
                         <td>{{ user.lastLoginAt ? user.lastLoginAt|format_datetime : '' }}</td>
                         <td>{{ user.createdAt ? user.createdAt|format_datetime : '' }}</td>
                         <td>{{ user.updatedAt ? user.updatedAt|format_datetime : '' }}</td>
