@@ -54,8 +54,16 @@ class UserRepository extends ServiceEntityRepository
         $query = $this->createQueryBuilder('u');
         if (null !== ($data['search'] ?? null)) {
             $exprOrX = $query->expr()->orX();
-            $exprOrX->add($query->expr()->like('u.firstname', ':search'))->add($query->expr()->like('u.lastname', ':search'))->add($query->expr()->like('u.email', ':search'));
+            $exprOrX
+                ->add($query->expr()->like('u.firstname', ':search'))
+                ->add($query->expr()->like('u.lastname', ':search'))
+                ->add($query->expr()->like('u.email', ':search'));
             $query->where($exprOrX)->setParameter('search', '%' . $data['search'] . '%');
+        }
+        if (null !== ($data['role'] ?? null)) {
+            $query
+                ->andWhere('u.roles LIKE :role')
+                ->setParameter('role', '%"'.$data['role'].'"%');
         }
         return $query;
     }
