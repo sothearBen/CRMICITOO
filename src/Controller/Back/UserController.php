@@ -9,6 +9,7 @@ use App\Form\Back\UserUpdateType;
 use App\Manager\UserManager;
 use App\Form\Back\UserFilterType;
 use App\Form\Back\UserBatchType;
+use App\Mailer\Mailer;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\Form\FormError;
@@ -17,6 +18,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Translation\TranslatorInterface;
 
 /**
@@ -83,7 +85,7 @@ class UserController extends AbstractController
     /**
      * @Route("/create", name="back_user_create", methods="GET|POST")
      */
-    public function create(Request $request): Response
+    public function create(Request $request, UserPasswordEncoderInterface $passwordEncoder, Mailer $mailer): Response
     {
         $this->denyAccessUnlessGranted('back_user_create');
         $user = new User();
@@ -91,9 +93,23 @@ class UserController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $password = bin2hex(random_bytes(4));
+            $user->setPassword(
+                $passwordEncoder->encodePassword(
+                    $user,
+                    $password
+                )
+            );
+
+            $user->setEnabled(false);
+            $user->setConfirmationToken(random_bytes(24));
+            
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);
             $em->flush();
+            
+            $mailer->sendInvitation($user, $password);
+            
             $msg = $this->translator->trans('user.create.flash.success', [ '%identifier%' => $user, ], 'back_messages');
             $this->addFlash('success', $msg);
             return $this->redirectToRoute('back_user_search');
@@ -174,4 +190,20 @@ class UserController extends AbstractController
             'form' => $form->createView(),
         ]);
     }
+    
+    /**
+     * @Route("/permute/enabled", name="back_user_permute_enabled", methods="GET")
+     */
+    public function permuteEnabled(Request $request): Response
+    {    
+        $users = $this->userManager->getUsers();
+        $this->denyAccessUnlessGranted('back_user_permute_enabled', $users);
+        foreach ($users as $user) {
+            $permute = $user->getEnabled() ? false : true;
+            $user->setEnabled($permute);
+        }
+        $this->getDoctrine()->getManager()->flush();
+        return $this->redirectToRoute('back_user_search');
+    }
 }
+    
