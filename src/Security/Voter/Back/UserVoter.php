@@ -15,6 +15,8 @@ class UserVoter extends Voter
     const READ = 'back_user_read';
     const UPDATE = 'back_user_update';
     const DELETE = 'back_user_delete';
+    const PERMUTE_ENABLED = 'back_user_permute_enabled';
+    
     /**
      * @var Security
      */
@@ -35,7 +37,8 @@ class UserVoter extends Voter
             self::CREATE,
             self::READ,
             self::UPDATE,
-            self::DELETE
+            self::DELETE,
+            self::PERMUTE_ENABLED,
         ]);
     }
 
@@ -46,49 +49,83 @@ class UserVoter extends Voter
         if (!$user instanceof UserInterface) {
             return false;
         }
-        
-        if ($this->security->isGranted('ROLE_ADMIN')) {
-            return true;
-        }
 
         // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
             case self::SEARCH:
                 return $this->canSearch($subject, $user);
             case self::CREATE:
-                return $this->canCreate($subject, $user);
+                return $this->canCreate($user);
             case self::READ:
                 return $this->canRead($subject, $user);
             case self::UPDATE:
                 return $this->canUpdate($subject, $user);
             case self::DELETE:
                 return $this->canDelete($subject, $user);
+            case self::PERMUTE_ENABLED:
+                return $this->canPermuteEnabled($subject, $user);
         }
         throw new \LogicException('This code should not be reached!');
     }
     
-    private function canSearch($subject, User $user)
+    private function canSearch(array $data, User $user)
     {
+        if (!$this->security->isGranted('ROLE_USER_ADMIN')) {
+            return false;
+        }
         return true;
     }
 
-    private function canCreate($subject, User $user)
+    private function canCreate(User $user)
     {
+        if (!$this->security->isGranted('ROLE_USER_ADMIN')) {
+            return false;
+        }
         return true;
     }
 
-    private function canRead($subject, User $user)
+    private function canRead(User $subject, User $user)
     {
+        if (!$this->security->isGranted('ROLE_USER_ADMIN')) {
+            return false;
+        }
         return true;
     }
 
-    private function canUpdate($subject, User $user)
+    private function canUpdate(User $subject, User $user)
     {
-        return false;
+        if (!$this->security->isGranted('ROLE_USER_ADMIN')) {
+            return false;
+        }
+        if ($subject->hasRole("ROLE_SUPER_ADMIN")) {
+           return false;
+        }
+        return true;
     }
 
-    private function canDelete($subject, User $user)
+    private function canDelete(array $subject, User $user)
     {
-        return false;
+        if (!$this->security->isGranted('ROLE_USER_ADMIN')) {
+            return false;
+        }
+        foreach ($subject as $user) {
+            if ($user->hasRole("ROLE_SUPER_ADMIN")) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    private function canPermuteEnabled(array $subject, User $user)
+    {
+        if (!$this->security->isGranted('ROLE_USER_ADMIN')) {
+            return false;
+        }
+        foreach ($subject as $user) {
+            if ($user->hasRole("ROLE_SUPER_ADMIN")) {
+                return false;
+            }
+        }
+        return true;
     }
 }
