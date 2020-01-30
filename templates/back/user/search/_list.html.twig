@@ -45,7 +45,7 @@
                                     <i class="fas fa-file-alt"></i>
                                 </a>
                             {% endif %}
-                            {% if can_update not user.hasRole("ROLE_SUPER_ADMIN") %}
+                            {% if can_update and not user.hasRole("ROLE_SUPER_ADMIN") %}
                                 <a href="{{ path('back_user_update', {'id': user.id}) }}" title="{{ 'button.update_title'|trans() }}"
                                     class="btn btn-warning" aria-label="{{ 'button.update_title'|trans() }}" role="button">
                                     <i class="fas fa-edit"></i>
