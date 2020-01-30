@@ -1,6 +1,7 @@
 nav:
     home: Accueil
     account: Compte
+    account_back: Back-office
     account_login: Connexion
     account_logout: Déconnection
     account_register: Inscription
