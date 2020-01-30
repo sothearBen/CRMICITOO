@@ -149,6 +149,8 @@ class UserManager
         switch ($action) {
             case 'delete':
                 return $this->validationDelete($users);
+            case 'permute_enabled':
+                return $this->validationPermuteEnabled($users);
         }
         return true;
     }
@@ -162,9 +164,21 @@ class UserManager
      */
     public function validationDelete($users)
     {
-        /*foreach($users as $user) {
-            
-        }*/        
+        foreach($users as $user) {
+            if ($user->hasRole("ROLE_SUPER_ADMIN")) {
+                return $this->translator->trans('user.error.cannot_delete_super_admin', [], 'back_messages');
+            }
+        }
+        return true;
+    }
+    
+    public function validationPermuteEnabled($users)
+    {
+        foreach($users as $user) {
+            if ($user->hasRole("ROLE_SUPER_ADMIN")) {
+                return $this->translator->trans('user.error.cannot_permute_enabled_super_admin', [], 'back_messages');
+            }
+        }
         return true;
     }
     
@@ -184,6 +198,8 @@ class UserManager
         switch ($action) {
             case 'delete':
                 return $this->urlGenerator->generate('back_user_delete', $this->getIds($users));
+            case 'permute_enabled':
+                return $this->urlGenerator->generate('back_user_permute_enabled', $this->getIds($users));
         }
         return false;
     }

@@ -46,6 +46,7 @@ class UserBatchType extends AbstractType
                 'placeholder' => 'Action',
                 'choices' => [
                     'action.delete' => 'delete',
+                    'action.permute_enabled' => 'permute_enabled',
                 ],
                 'multiple' => false,
             ])
