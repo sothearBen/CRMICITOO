@@ -91,10 +91,6 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, $providerKey)
     {
-        if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
-            return new RedirectResponse($targetPath);
-        }
-
         $user = $token->getUser();
         
         $user->setLastLoginAt(new \DateTime());
@@ -102,6 +98,10 @@ class LoginFormAuthenticator extends AbstractFormLoginAuthenticator
         
         $msg = $this->translator->trans('login.message.welcome', ['%user%' => $user ], 'security');
         $this->session->getFlashBag()->add('success', $msg);
+        
+        if ($targetPath = $this->getTargetPath($request->getSession(), $providerKey)) {
+            return new RedirectResponse($targetPath);
+        }
         
         if ($user->hasRole('ROLE_ADMIN')) {
             return new RedirectResponse($this->urlGenerator->generate('back_home'));
