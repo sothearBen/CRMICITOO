@@ -19,5 +19,8 @@
         "dev": "encore dev",
         "watch": "encore dev --watch",
         "build": "encore production --progress"
+    },
+    "dependencies": {
+        "@ckeditor/ckeditor5-image": "^18.0.0"
     }
 }

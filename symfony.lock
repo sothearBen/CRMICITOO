@@ -144,6 +144,9 @@
             "./config/packages/sensio_framework_extra.yaml"
         ]
     },
+    "studio-42/elfinder": {
+        "version": "2.1.55"
+    },
     "swiftmailer/swiftmailer": {
         "version": "v6.2.1"
     },
