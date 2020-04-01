@@ -1,7 +1,6 @@
 db:
-    type: mysql
+    type: mysql:10.4
     disk: 1024
-    size: S
 
 files:
     type: network-storage:1.0
