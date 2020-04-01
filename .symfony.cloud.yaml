@@ -9,10 +9,14 @@ runtime:
         - sodium
         - ctype
         - iconv
+        - pdo_mysql
         
 
 build:
     flavor: none
+
+relationships:
+    database: "db:mysql"
 
 web:
     locations:
