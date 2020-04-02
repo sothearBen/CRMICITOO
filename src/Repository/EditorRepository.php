@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\User;
+use App\Entity\Editor;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use \Doctrine\ORM\Tools\Pagination\Paginator;
@@ -11,20 +11,20 @@ use \Symfony\Component\HttpFoundation\Session\Session;
 use \Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
- * @method User|null find($id, $lockMode = null, $lockVersion = null)
- * @method User|null findOneBy(array $criteria, array $orderBy = null)
- * @method User[]    findAll()
- * @method User[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Editor|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Editor|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Editor[]    findAll()
+ * @method Editor[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class UserRepository extends ServiceEntityRepository
+class EditorRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, User::class);
+        parent::__construct($registry, Editor::class);
     }
 
     /**
-     * @return [] Returns an array of User objects
+     * @return [] Returns an array of Editor objects
      */
     public function search(Request $request, Session $session, array $data, string &$page)
     {
@@ -33,11 +33,11 @@ class UserRepository extends ServiceEntityRepository
         }
         $firstResult = ($page - 1) * $data['number_by_page'];
         $query = $this->getSearchQuery($data);
-        $query->setFirstResult($firstResult)->setMaxResults($data['number_by_page'])->addOrderBy('u.updatedAt', 'DESC');
+        $query->setFirstResult($firstResult)->setMaxResults($data['number_by_page'])->addOrderBy('e.position', 'ASC');
         $paginator = new Paginator($query);
         if ($paginator->count() <= $firstResult && $page != 1) {
             if (!$request->get('page')) {
-                $session->set('back_user_page', --$page);
+                $session->set('back_editor_page', --$page);
                 return $this->search($request, $session, $data, $page);
             } else {
                 throw new NotFoundHttpException();
@@ -51,20 +51,16 @@ class UserRepository extends ServiceEntityRepository
      */
     public function getSearchQuery(array $data)
     {
-        $query = $this->createQueryBuilder('u');
+        $query = $this->createQueryBuilder('e');
         if (null !== ($data['search'] ?? null)) {
             $exprOrX = $query->expr()->orX();
             $exprOrX
-                ->add($query->expr()->like('u.firstname', ':search'))
-                ->add($query->expr()->like('u.lastname', ':search'))
-                ->add($query->expr()->like('u.email', ':search'));
+                ->add($query->expr()->like('e.key', ':search'))
+                ->add($query->expr()->like('e.body', ':search'));
+                
             $query->where($exprOrX)->setParameter('search', '%' . $data['search'] . '%');
         }
-        if (null !== ($data['role'] ?? null)) {
-            $query
-                ->andWhere('u.roles LIKE :role')
-                ->setParameter('role', '%"'.$data['role'].'"%');
-        }
+        
         return $query;
     }
 }
