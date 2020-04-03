@@ -1,3 +1,15 @@
+editor:
+    field:
+        body: Contenu
+    label:
+        body: Contenu
+        key: Clé
+    update:
+        flash:
+            success: 'Les données ont été sauvegardées.'
+        h1: 'Contenu du site'
+        h2: 'Édition de texte'
+        title: 'Édition de texte'
 invitation:
     email:
         subject: '%website_name% - Invitation'
@@ -33,6 +45,11 @@ action:
     update: Modifier
     permute_enabled: Activer / Désactiver
 button:
+    add: Ajout
+    down: Descendre
+    remove: Supprimer
+    save: Enregistrer
+    up: Monter
     back: Retour
     cancel: Annuler
     create: Ajouter

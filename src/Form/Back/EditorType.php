@@ -28,6 +28,7 @@ class EditorType extends AbstractType
                 'attr' => [
                     'class' => 'editor',
                 ],
+                'required' => false,
             ]);
     }
 
