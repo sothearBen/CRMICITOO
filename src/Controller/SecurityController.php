@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Authentication\Provider\UserAuthenticationProvider;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\Security\Core\Exception\LogicException;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Guard\GuardAuthenticatorHandler;
 use App\Security\LoginFormAuthenticator;
@@ -125,9 +125,11 @@ class SecurityController extends AbstractController
             if (!$user || false === \strpos($token, 'forget_password')) {
                 throw $this->createNotFoundException(sprintf('The user with confirmation token "%s" does not exist', $token));
             }
-        } elseif (!$user) { throw new LogicException("No user selected."); }
+        } elseif (!$user) {
+            throw new LogicException("No user selected.");
+        }
         $form = $this->createForm(ResetPasswordFormType::class, null, [
-            'with_token' => null !== $token,
+            'with_token' => '' !== $token,
         ]);
         $form->handleRequest($request);
 

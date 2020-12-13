@@ -1,7 +1,7 @@
 parameters:
     configuration:
         name: "DevFusion"
-        from_email: no-reply@dev-fusion.com
+        from_email: postmaster@sandbox447ef1d296344bd7b71698603b65522a.mailgun.org
         to_email: martin.gilbert@dev-fusion.com
 services:
     # default configuration for services in *this* file
