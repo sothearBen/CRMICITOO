@@ -44,7 +44,7 @@ class RegistrationController extends AbstractController
             );
 
             $user->setEnabled(false);
-            $user->setConfirmationToken(random_bytes(24));
+            $user->setConfirmationToken('register_' . bin2hex(random_bytes(24)));
             $user->setLastLoginAt(new \DateTime());
             
             $entityManager = $this->getDoctrine()->getManager();
