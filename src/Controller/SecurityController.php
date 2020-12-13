@@ -63,9 +63,9 @@ class SecurityController extends AbstractController
      */
     public function registrationConfirm(Request $request, UserRepository $userRepository, GuardAuthenticatorHandler $guardHandler, LoginFormAuthenticator $authenticator): Response
     {
-        $token = $request->query->get('token');
+        $token = $request->query->get('token', '');
         $user = $userRepository->findOneByConfirmationToken($token);
-        if (null === $user) {
+        if (null === $user || false === \strpos($token, 'register')) {
             throw $this->createNotFoundException(sprintf('The user with confirmation token "%s" does not exist', $token));
         }
         
@@ -96,7 +96,7 @@ class SecurityController extends AbstractController
             $user = $userRepository
                 ->findOneByEmail($form->get('email')->getData());
             if ($user) {
-                $user->setConfirmationToken(random_bytes(24));
+                $user->setConfirmationToken('forget_password_' . bin2hex(random_bytes(24)));
                 $this->getDoctrine()->getManager()->flush();
                 $mailer->sendForgetPassword($user);
                 $msg = $this->translator->trans('forget_password.flash.check_email', [ '%user%' => $user, ], 'security');
@@ -120,9 +120,11 @@ class SecurityController extends AbstractController
         LoginFormAuthenticator $authenticator,
         User $user=null
     ): response {
-        if ($token = $request->query->get('token')) {
+        if ($token = $request->query->get('token', '')) {
             $user = $userRepository->findOneByConfirmationToken($token);
-            if (!$user) { throw $this->createNotFoundException(sprintf('The user with confirmation token "%s" does not exist', $token)); }
+            if (!$user || false === \strpos($token, 'forget_password')) {
+                throw $this->createNotFoundException(sprintf('The user with confirmation token "%s" does not exist', $token));
+            }
         } elseif (!$user) { throw new LogicException("No user selected."); }
         $form = $this->createForm(ResetPasswordFormType::class, null, [
             'with_token' => null !== $token,
