@@ -24,12 +24,34 @@ class SecurityController extends AbstractController
 {
 
     /**
+     * @var UserRepository
+     */
+    private $userRepository;
+    
+    /**
+     * @var LoginFormAuthenticator
+     */
+    private $authenticator;
+    
+    /**
+     * @var GuardAuthenticatorHandler
+     */
+    private $guardHandler;
+
+    /**
      * @var TranslatorInterface
      */
     private $translator;
 
-    public function __construct(TranslatorInterface $translator)
-    {
+    public function __construct(
+        UserRepository $userRepository,
+        LoginFormAuthenticator $authenticator,
+        GuardAuthenticatorHandler $guardHandler,
+        TranslatorInterface $translator
+    ) {
+        $this->userRepository = $userRepository;
+        $this->authenticator = $authenticator;
+        $this->guardHandler = $guardHandler;
         $this->translator = $translator;
     }
     
@@ -38,9 +60,9 @@ class SecurityController extends AbstractController
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
-        // if ($this->getUser()) {
-        //    $this->redirectToRoute('target_path');
-        // }
+        if ($this->getUser()) {
+            return $this->redirectToRoute('front_home');
+        }
 
         // get the login error if there is one
         $error = $authenticationUtils->getLastAuthenticationError();
@@ -61,10 +83,10 @@ class SecurityController extends AbstractController
     /**
      * @Route("/registration_confirm", name="app_registration_confirm")
      */
-    public function registrationConfirm(Request $request, UserRepository $userRepository, GuardAuthenticatorHandler $guardHandler, LoginFormAuthenticator $authenticator): Response
+    public function registrationConfirm(Request $request): Response
     {
         $token = $request->query->get('token', '');
-        $user = $userRepository->findOneByConfirmationToken($token);
+        $user = $this->userRepository->findOneByConfirmationToken($token);
         if (null === $user || false === \strpos($token, 'register')) {
             throw $this->createNotFoundException(sprintf('The user with confirmation token "%s" does not exist', $token));
         }
@@ -76,10 +98,10 @@ class SecurityController extends AbstractController
         $msg = $this->translator->trans('registration.flash.confirmed', [ '%user%' => $user, ], 'security');
         $this->addFlash('success', $msg);
         
-        return $guardHandler->authenticateUserAndHandleSuccess(
+        return $this->guardHandler->authenticateUserAndHandleSuccess(
             $user,
             $request,
-            $authenticator,
+            $this->authenticator,
             'main' // firewall name in security.yaml
         );
     }
@@ -87,13 +109,13 @@ class SecurityController extends AbstractController
     /**
      * @Route("/forget_password", name="app_forget_password")
      */
-    public function forgetPassword(Request $request, UserRepository $userRepository, Mailer $mailer): Response
+    public function forgetPassword(Request $request, Mailer $mailer): Response
     {
         $form = $this->createForm(ForgetPasswordFormType::class);
         $form->handleRequest($request);
         
         if ($form->isSubmitted() && $form->isValid()) {
-            $user = $userRepository
+            $user = $this->userRepository
                 ->findOneByEmail($form->get('email')->getData());
             if ($user) {
                 $user->setConfirmationToken('forget_password_' . bin2hex(random_bytes(24)));
@@ -114,14 +136,11 @@ class SecurityController extends AbstractController
      */
     public function resetPassword(
         Request $request,
-        UserRepository $userRepository,
         UserPasswordEncoderInterface $passwordEncoder,
-        GuardAuthenticatorHandler $guardHandler,
-        LoginFormAuthenticator $authenticator,
         User $user=null
     ): response {
         if ($token = $request->query->get('token', '')) {
-            $user = $userRepository->findOneByConfirmationToken($token);
+            $user = $this->userRepository->findOneByConfirmationToken($token);
             if (!$user || false === \strpos($token, 'forget_password')) {
                 throw $this->createNotFoundException(sprintf('The user with confirmation token "%s" does not exist', $token));
             }
@@ -141,7 +160,7 @@ class SecurityController extends AbstractController
             $this->getDoctrine()->getManager()->flush();
             $msg = $this->translator->trans('reset_password.flash.success', [], 'security');
             $this->addFlash('info', $msg);
-            return $guardHandler->authenticateUserAndHandleSuccess($user, $request, $authenticator, 'main');
+            return $this->guardHandler->authenticateUserAndHandleSuccess($user, $request, $this->authenticator, 'main');
         }
         return $this->render('security/reset_password.html.twig', [
             'form' => $form->createView(),

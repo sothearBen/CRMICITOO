@@ -57,6 +57,10 @@ class SecurityControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isRedirect());
 
         $client->followRedirect();
+        $this->assertSame("/", $client->getRequest()->getPathInfo());
+        $crawler = $client->request('GET', '/login');
+        $this->assertResponseRedirects('/');
+        $client->followRedirect();
         $this->logout($client);
     }
 
