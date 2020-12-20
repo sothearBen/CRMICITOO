@@ -1,5 +1,8 @@
 nav:
     home: Accueil
+    lang: Langue
+    lang_fr: Français
+    lang_en: Anglais
     account: Compte
     account_login: Connexion
     account_logout: Déconnection
