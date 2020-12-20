@@ -51,7 +51,7 @@ class RegistrationController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $mailer->sendRegistration($user);
+            $mailer->sendRegistration($user, $request->getLocale());
 
             $msg = $this->translator->trans('registration.flash.check_email', [ '%email%' => $user->getEmail(), ], 'security');
             $this->addFlash('info', $msg);

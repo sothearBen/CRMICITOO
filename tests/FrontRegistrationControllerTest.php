@@ -10,7 +10,6 @@ class FrontRegistrationControllerTest extends WebTestCase
 {
     public function testRegisterAndConfirmEmail()
     {
-        echo "testRegisterAndConfirmEmail\n";
         $client = static::createClient();
         /**
          * @var Crawler $crawler
@@ -35,21 +34,13 @@ class FrontRegistrationControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isRedirect());
         
         // Checks that an email was sent
-        $mailCollector = $client->getProfile()->getCollector('swiftmailer');
-        $this->assertSame(1, $mailCollector->getMessageCount());
-        $collectedMessages = $mailCollector->getMessages();
-        $message = $collectedMessages[0];
+        $this->assertEmailCount(1);
 
-        // Asserting email data
-        $this->assertInstanceOf('Swift_Message', $message);
-        $this->assertSame('Bienvenue Martin GILBERT', $message->getSubject());
-        $this->assertSame('martin3129@gmail.com', key($message->getTo()));
         
-        // Collect confirmation account url
-        $bodyMailCrawler = new Crawler($message->getBody());
-        $link = $bodyMailCrawler->filter('a')->first();
-        $this->assertSame('ici', $link->text());
-        $activateAccountUrl = $link->attr('href');
+        $email = $this->getMailerMessage();
+        $confirmationUrl = $email->getContext()['confirmation_url'] ?? '';
+        $this->assertEmailHeaderSame($email, 'to', 'martin3129@gmail.com');
+        $this->assertEmailHeaderSame($email, 'subject', 'Bienvenue Martin GILBERT');
         
         // Go to login page after redirect
         $client->followRedirect();
@@ -57,7 +48,7 @@ class FrontRegistrationControllerTest extends WebTestCase
         $this->assertSelectorTextContains('#flash_message', "Alerte info : Un e-mail a été envoyé à l'adresse martin3129@gmail.com. Il contient un lien d'activation sur lequel il vous faudra cliquer afin d'activer votre compte.");
 
         // Activate account and login
-        $client->request('GET', $activateAccountUrl);
+        $client->request('GET', $confirmationUrl);
         $this->assertTrue($client->getResponse()->isRedirect());
         $client->followRedirect();
         $crawler = $client->getCrawler();
@@ -68,6 +59,5 @@ class FrontRegistrationControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isRedirect());
         $client->followRedirect();
         $this->assertSame("/", $client->getRequest()->getPathInfo());
-        echo "end\n";
     }
 }

@@ -98,7 +98,7 @@ class SecurityController extends AbstractController
             if ($user) {
                 $user->setConfirmationToken('forget_password_' . bin2hex(random_bytes(24)));
                 $this->getDoctrine()->getManager()->flush();
-                $mailer->sendForgetPassword($user);
+                $mailer->sendForgetPassword($user, $request->getLocale());
                 $msg = $this->translator->trans('forget_password.flash.check_email', [ '%user%' => $user, ], 'security');
                 $this->addFlash('success', $msg);
             }

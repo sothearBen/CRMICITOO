@@ -19,7 +19,6 @@ class SecurityControllerTest extends WebTestCase
 
     public function testLogin()
     {
-        echo "testLogin\n";
         $client = static::createClient();
         $crawler = $client->request('GET', '/login');
 
@@ -63,7 +62,6 @@ class SecurityControllerTest extends WebTestCase
 
     public function testForgetPassword()
     {
-        echo "testForgetPassword\n";
         $client = static::createClient();
         $crawler = $client->request('GET', '/forget_password');
 
@@ -79,27 +77,17 @@ class SecurityControllerTest extends WebTestCase
         $this->assertTrue($client->getResponse()->isRedirect());
         
         // Checks that an email was sent
-        $mailCollector = $client->getProfile()->getCollector('swiftmailer');
-        $this->assertSame(1, $mailCollector->getMessageCount());
-        $collectedMessages = $mailCollector->getMessages();
-        $message = $collectedMessages[0];
-
-        // Asserting email data
-        $this->assertInstanceOf('Swift_Message', $message);
-        $this->assertSame('Réinitialisation de votre mot de passe', $message->getSubject());
-        $this->assertSame('martin3129@gmail.com', key($message->getTo()));
-        
-        // Collect confirmation account url
-        $bodyMailCrawler = new Crawler($message->getBody());
-        $link = $bodyMailCrawler->filter('a')->first();
-        $this->assertSame('ici', $link->text());
-        $resetPasswordUrl = $link->attr('href');
+        $this->assertEmailCount(1);
+        $email = $this->getMailerMessage();
+        $confirmationUrl = $email->getContext()['confirmation_url'] ?? '';
+        $this->assertEmailHeaderSame($email, 'to', 'martin3129@gmail.com');
+        $this->assertEmailHeaderSame($email, 'subject', 'Réinitialisation de votre mot de passe');
         
         $client->followRedirect();
         $this->assertSelectorTextContains('#flash_message', "Alerte succès : Un e-mail a été envoyé. Il contient un lien sur lequel il vous faudra cliquer pour réinitialiser votre mot de passe. Si vous ne recevez pas d'email, vérifiez votre dossier spam ou essayez à nouveau.");
 
         // Reset password and login with new
-        $client->request('GET', $resetPasswordUrl);
+        $client->request('GET', $confirmationUrl);
         $crawler = $client->getCrawler();
         $this->assertSelectorTextContains('h1', "Réinitialiser le mot de passe");
         
@@ -128,7 +116,6 @@ class SecurityControllerTest extends WebTestCase
 
     public function testResetPassword()
     {
-        echo "testResetPassword\n";
         $client = static::createClient();
         $userRepository = static::$container->get(UserRepository::class);
         
