@@ -2,12 +2,15 @@
 
 namespace App\Mailer;
 
+use Symfony\Component\Mailer\MailerInterface;
+use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use App\Entity\User;
 use App\Repository\UserRepository;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class Mailer
 {
@@ -35,109 +38,127 @@ class Mailer
     /**
      * @var ParameterBagInterface
      */
-    protected $parameters;
+    protected $parameterBag;
     
     /**
      * Mailer constructor.
      *
      */
-    public function __construct(\Swift_Mailer $mailer, UrlGeneratorInterface $router, Environment $templating, TranslatorInterface $translator, ParameterBagInterface $parameters)
+    public function __construct(MailerInterface $mailer, UrlGeneratorInterface $router, Environment $templating, TranslatorInterface $translator, ParameterBagInterface $parameterBag)
     {
         $this->mailer = $mailer;
         $this->router = $router;
         $this->templating = $templating;
         $this->translator = $translator;
-        $this->parameters = $parameters;
+        $this->parameterBag = $parameterBag;
     }
     
-    public function sendInvitation(User $user, string $password)
+    public function sendRegistration(User $user, string $locale)
     {
         $url = $this->router->generate(
             'app_registration_confirm',
             [
+                '_locale' => $locale,
                 'token' => $user->getConfirmationToken(),
             ],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        $subject = $this->translator->trans('invitation.email.subject', [
-            '%user%' => $user,
-            '%website_name%' => $this->parameters->get('configuration')['name'],
-        ], 'back_messages');
-        $template = 'back/email/invite.html.twig';
-        $from = [
-            $this->parameters->get('configuration')['from_email'] => $this->parameters->get('configuration')['name'],
-        ];
-        $to = $user->getEmail();
-        $body = $this->templating->render($template, [
-            'user' => $user,
-            'password' => $password,
-            'website_name' => $this->parameters->get('configuration')['name'],
-            'confirmation_url' => $url,
-        ]);
-        $message = (new \Swift_Message())
-            ->setSubject($subject)
-            ->setFrom($from)
-            ->setTo($to)
-            ->setContentType("text/html")
-            ->setBody($body);
-        $this->mailer->send($message);
+        $email = (new TemplatedEmail())
+            ->from(new Address(
+                $this->parameterBag->get('configuration')['from_email'],
+                $this->parameterBag->get('configuration')['name']
+            ))
+            ->to($user->getEmail())
+            ->subject($this->translator->trans('registration.email.subject', [ '%user%' => $user ], 'security'))
+            ->htmlTemplate('front/email/register.html.twig')
+            ->context([
+                'user' => $user,
+                'website_name' => $this->parameterBag->get('configuration')['name'],
+                'confirmation_url' => $url,
+            ]);
+        $this->mailer->send($email);
     }
 
-    public function sendRegistration(User $user)
-    {
-        $url = $this->router->generate(
-            'app_registration_confirm',
-            [
-                'token' => $user->getConfirmationToken(),
-            ],
-            UrlGeneratorInterface::ABSOLUTE_URL
-        );
-        $subject = $this->translator->trans('registration.email.subject', [ '%user%' => $user ], 'security');
-        $template = 'front/email/register.html.twig';
-        $from = [
-            $this->parameters->get('configuration')['from_email'] => $this->parameters->get('configuration')['name'],
-        ];
-        $to = $user->getEmail();
-        $body = $this->templating->render($template, [
-            'user' => $user,
-            'website_name' => $this->parameters->get('configuration')['name'],
-            'confirmation_url' => $url,
-        ]);
-        $message = (new \Swift_Message())
-            ->setSubject($subject)
-            ->setFrom($from)
-            ->setTo($to)
-            ->setContentType("text/html")
-            ->setBody($body);
-        $this->mailer->send($message);
-    }
-
-    public function sendForgetPassword(User $user)
+    public function sendForgetPassword(User $user, string $locale)
     {
         $url = $this->router->generate(
             'app_reset_password',
             [
+                '_locale' => $locale,
                 'token' => $user->getConfirmationToken(),
             ],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        $subject = $this->translator->trans('forget_password.email.subject', [], 'security');
-        $template = 'security/email/forget_password.html.twig';
-        $from = [
-            $this->parameters->get('configuration')['from_email'] => $this->parameters->get('configuration')['name'],
-        ];
-        $to = $user->getEmail();
-        $body = $this->templating->render($template, [
-            'user' => $user,
-            'website_name' => $this->parameters->get('configuration')['name'],
-            'confirmation_url' => $url,
-        ]);
-        $message = (new \Swift_Message())
-            ->setSubject($subject)
-            ->setFrom($from)
-            ->setTo($to)
-            ->setContentType("text/html")
-            ->setBody($body);
-        $this->mailer->send($message);
+        $email = (new TemplatedEmail())
+            ->from(new Address(
+                $this->parameterBag->get('configuration')['from_email'],
+                $this->parameterBag->get('configuration')['name']
+            ))
+            ->to($user->getEmail())
+            ->subject($this->translator->trans('forget_password.email.subject', [], 'security'))
+            ->htmlTemplate('security/email/forget_password.html.twig')
+            ->context([
+                'user' => $user,
+                'website_name' => $this->parameterBag->get('configuration')['name'],
+                'confirmation_url' => $url,
+            ]);
+        $this->mailer->send($email);
+    }
+    
+    public function sendResetEmailCheck(User $user, string $newEmail, string $locale)
+    {
+        $url = $this->router->generate(
+            'app_reset_email',
+            [
+                'token' => $user->getConfirmationToken(),
+            ],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $email = (new TemplatedEmail())
+            ->from(new Address(
+                $this->parameterBag->get('configuration')['from_email'],
+                $this->parameterBag->get('configuration')['name']
+            ))
+            ->to($newEmail)
+            ->subject($this->translator->trans('reset_email.email.subject', [], 'security'))
+            ->htmlTemplate('security/email/reset_email.html.twig')
+            ->context([
+                'user' => $user,
+                'new_email' => $newEmail,
+                'website_name' => $this->parameterBag->get('configuration')['name'],
+                'confirmation_url' => $url,
+            ]);
+        $this->mailer->send($email);
+    }
+
+    public function sendInvitation(User $user, string $password, string $locale)
+    {
+        $url = $this->router->generate(
+            'app_registration_confirm',
+            [
+                'token' => $user->getConfirmationToken(),
+            ],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $email = (new TemplatedEmail())
+            ->from(new Address(
+                $this->parameterBag->get('configuration')['from_email'],
+                $this->parameterBag->get('configuration')['name']
+            ))
+            ->to($user->getEmail())
+            ->subject(
+                $this->translator->trans('invitation.email.subject', [
+                    '%user%' => $user,
+                    '%website_name%' => $this->parameterBag->get('configuration')['name'],
+                ], 'back_messages')
+            )
+            ->htmlTemplate('back/email/invite.html.twig')
+            ->context([
+                'user' => $user,
+                'password' => $password,
+                'website_name' => $this->parameterBag->get('configuration')['name'],
+                'confirmation_url' => $url,
+            ]);
+        $this->mailer->send($email);
     }
 }

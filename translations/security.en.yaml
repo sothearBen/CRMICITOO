@@ -1,3 +1,26 @@
+reset_email:
+    title: Update email
+    h1: Update email
+    btn:
+        submit: Send
+    email:
+        subject: 'Reset email'
+        message: |
+            Hello %user%,
+
+            To confirm the update of your email - please click <a href="%confirmation_url%">here</a>.
+
+            Regards,
+            <a href="%host%">%website_name%</a>
+    flash:
+        check_email: |
+            An email has been sent to your new address.. It contains a link you must click to confirm your new address.
+            If you don't get an email check your spam folder or try again.
+        success: The email address has been changed.
+    label:
+        email: New email
+        password: Password
+        repeat_email: Repeat new email
 forget_password:
     title: Forget password
     h1: Forget password

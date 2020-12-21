@@ -11,19 +11,19 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\Session\SessionInterface;
-use Symfony\Component\Translation\TranslatorInterface;
 use Symfony\Component\Routing\Exception\InvalidParameterException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
- * 
+ *
  */
 class UserManager
 {
     const NUMBER_BY_PAGE = 15;
     
     /**
-     * @var RequestStack 
+     * @var RequestStack
      */
     private $requestStack;
     
@@ -38,7 +38,7 @@ class UserManager
     private $em;
     
     /**
-     * @var UrlGeneratorInterface 
+     * @var UrlGeneratorInterface
      */
     private $urlGenerator;
     
@@ -47,14 +47,15 @@ class UserManager
      */
     private $translator;
     
-    /** 
+    /**
      * @param RequestStack $requestStack
      * @param SessionInterface $session
      * @param EntityManagerInterface $em
      * @param UrlGeneratorInterface $urlGenerator
      * @param TranslatorInterface $translator
      */
-    public function __construct(RequestStack $requestStack,
+    public function __construct(
+        RequestStack $requestStack,
         SessionInterface $session,
         EntityManagerInterface $em,
         UrlGeneratorInterface $urlGenerator,
@@ -69,9 +70,9 @@ class UserManager
     
     /**
      * Configure the filter form
-     * 
+     *
      *  Set the filter's default fields, save and retrieve the last searche in session.
-     *  
+     *
      * @param FormInterface $form
      * @return \Symfony\Component\Form\FormInterface
      */
@@ -79,11 +80,13 @@ class UserManager
     {
         $request = $this->requestStack->getCurrentRequest();
         $page = $request->get('page');
-        if (!$page) { $page = $this->session->get('back_user_page', 1); }
+        if (!$page) {
+            $page = $this->session->get('back_user_page', 1);
+        }
         $this->session->set('back_user_page', $page);
-        if($request->isMethod('POST') && $request->query->get('back_user_search')) {
+        if ($request->isMethod('POST') && $request->query->get('back_user_search')) {
             $form->submit($request->query->get('back_user_search'));
-        } elseif(!$form->getData()) {
+        } elseif (!$form->getData()) {
             $form->setData($this->getDefaultFormSearchData());
         }
         if ($form->isSubmitted() && $form->isValid()) {
@@ -96,14 +99,14 @@ class UserManager
     
     /**
      * Get the default data from the filter form
-     * 
+     *
      *  Get saved data in session or default filter form.
-     *  
+     *
      * @return array
      */
     public function getDefaultFormSearchData()
     {
-        return [ 
+        return [
             'search' => $this->session->get('back_user_search', null),
             'role' => $this->session->get('back_user_role', null),
             'number_by_page' => $this->session->get('back_user_number_by_page', self::NUMBER_BY_PAGE),
@@ -112,7 +115,7 @@ class UserManager
 
     /**
      * Get query data
-     * 
+     *
      *  Transform filter form data into an array compatible with url parameters.
      *  The returned array must be merged with the parameters of the route.
      * @param array $data
@@ -135,7 +138,7 @@ class UserManager
      * Valid the multiple selection form
      *
      *  If the result returned is a string the form is not validated and the message is added in the flash bag
-     *  
+     *
      * @param FormInterface $form
      * @throws LogicException
      * @return boolean|string
@@ -143,7 +146,9 @@ class UserManager
     public function validationBatchForm(FormInterface $form)
     {
         $users = $form->get('users')->getData();
-        if (0 === count($users)) { return $this->translator->trans("error.no_element_selected", [], 'back_messages'); }
+        if (0 === count($users)) {
+            return $this->translator->trans("error.no_element_selected", [], 'back_messages');
+        }
         $action = $form->get('action')->getData();
         
         switch ($action) {
@@ -159,12 +164,12 @@ class UserManager
      * Valid the delete action from multiple selection form
      *
      *  If the result returned is a string the form is not validated and the message is added in the flash bag
-     *  
+     *
      * @param array $users     * @return boolean|string
      */
     public function validationDelete($users)
     {
-        foreach($users as $user) {
+        foreach ($users as $user) {
             if ($user->hasRole("ROLE_SUPER_ADMIN")) {
                 return $this->translator->trans('user.error.cannot_delete_super_admin', [], 'back_messages');
             }
@@ -174,7 +179,7 @@ class UserManager
     
     public function validationPermuteEnabled($users)
     {
-        foreach($users as $user) {
+        foreach ($users as $user) {
             if ($user->hasRole("ROLE_SUPER_ADMIN")) {
                 return $this->translator->trans('user.error.cannot_permute_enabled_super_admin', [], 'back_messages');
             }
@@ -206,10 +211,10 @@ class UserManager
     
     /**
      * Get ids
-     * 
+     *
      *  Transform entities list into an array compatible with url parameters.
      *  The returned array must be merged with the parameters of the route.
-     *  
+     *
      * @param array $users     * @return array
      */
     private function getIds($users)
@@ -222,20 +227,24 @@ class UserManager
     }
     
     /**
-     * Get $users     * 
+     * Get $users     *
      *  Transform query parameter ids list into an array entities list.
-     * 
+     *
      * @throws InvalidParameterException
      * @throws NotFoundHttpException
      * @return array
      */
     public function getUsers()
-    {    
+    {
         $request = $this->requestStack->getCurrentRequest();
         $ids = $request->query->get('ids', null);
-        if (!is_array($ids)) { throw new InvalidParameterException(); }
+        if (!is_array($ids)) {
+            throw new InvalidParameterException();
+        }
         $users = $this->em->getRepository('App\Entity\User')->findById($ids);
-        if (count($ids) !== count($users)) { throw new NotFoundHttpException(); }
+        if (count($ids) !== count($users)) {
+            throw new NotFoundHttpException();
+        }
         return $users;
     }
 }

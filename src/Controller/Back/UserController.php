@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * @Route("/back/user")
@@ -28,18 +28,18 @@ class UserController extends AbstractController
 {
 
     /**
-     * 
+     *
      * @var UserRepository     */
     private $userRepository;
     
     /**
-     * 
+     *
      * @var UserManager     */
     private $userManager;
     
     /**
-     * 
-     * @var TranslatorInterface 
+     *
+     * @var TranslatorInterface
      */
     private $translator;
     
@@ -55,7 +55,9 @@ class UserController extends AbstractController
      */
     public function search(Request $request, Session $session, $page=null)
     {
-        if (!$page) { $page = $session->get('back_user_page', 1); }
+        if (!$page) {
+            $page = $session->get('back_user_page', 1);
+        }
         $formFilter = $this->createForm(UserFilterType::class, null, [ 'action' => $this->generateUrl('back_user_search', [ 'page' => 1 ]),]);
         $formFilter->handleRequest($request);
         $data = $this->userManager->configFormFilter($formFilter)->getData();
@@ -69,7 +71,9 @@ class UserController extends AbstractController
         $formBatch->handleRequest($request);
         if ($formBatch->isSubmitted() && $formBatch->isValid()) {
             $url = $this->userManager->dispatchBatchForm($formBatch);
-            if ($url) { return $this->redirect($url); }
+            if ($url) {
+                return $this->redirect($url);
+            }
         }
         return $this->render('back/user/search/index.html.twig', [
             'users' => $users,
@@ -159,7 +163,7 @@ class UserController extends AbstractController
      * @Route("/delete", name="back_user_delete", methods="GET|POST")
      */
     public function delete(Request $request): Response
-    {    
+    {
         $users = $this->userManager->getUsers();
         $this->denyAccessUnlessGranted('back_user_delete', $users);
         $formBuilder = $this->createFormBuilder();
@@ -174,7 +178,7 @@ class UserController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            foreach($users as $user) { 
+            foreach ($users as $user) {
                 $em->remove($user);
             }
             try {
@@ -195,7 +199,7 @@ class UserController extends AbstractController
      * @Route("/permute/enabled", name="back_user_permute_enabled", methods="GET")
      */
     public function permuteEnabled(Request $request): Response
-    {    
+    {
         $users = $this->userManager->getUsers();
         $this->denyAccessUnlessGranted('back_user_permute_enabled', $users);
         foreach ($users as $user) {
@@ -206,4 +210,3 @@ class UserController extends AbstractController
         return $this->redirectToRoute('back_user_search');
     }
 }
-    
