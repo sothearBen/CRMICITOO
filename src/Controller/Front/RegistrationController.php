@@ -10,7 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
-use Symfony\Component\Translation\TranslatorInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RegistrationController extends AbstractController
 {
@@ -44,14 +44,14 @@ class RegistrationController extends AbstractController
             );
 
             $user->setEnabled(false);
-            $user->setConfirmationToken(random_bytes(24));
+            $user->setConfirmationToken('register_' . bin2hex(random_bytes(24)));
             $user->setLastLoginAt(new \DateTime());
             
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $mailer->sendRegistration($user);
+            $mailer->sendRegistration($user, $request->getLocale());
 
             $msg = $this->translator->trans('registration.flash.check_email', [ '%email%' => $user->getEmail(), ], 'security');
             $this->addFlash('info', $msg);

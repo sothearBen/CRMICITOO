@@ -13,6 +13,35 @@
             <li class="nav-item">
                 <a class="nav-link" href="https://github.com/official-dev-fusion/dev-fusion-skeleton-user" target="_blank">Github</a>
             </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" id="dropdown_lang"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                >
+                    {{ 'nav.lang'|trans() }}
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="dropdown_lang">
+                    <li class="dropdown-item{{ 'fr' == app.request.locale ? ' active' }}">
+                        <a href="{{ path('locale_update', { 
+                            'lang': 'fr',
+                            'route': app.request.attributes.get('_route'),
+                            'params': app.request.attributes.get('_route_params'),
+                            'query': app.request.query.all()
+                        }) }}">
+                            <span>{{ 'nav.lang_fr'|trans() }}</span>
+                        </a>
+                    </li>
+                    <li class="dropdown-item{{ 'en' == app.request.locale ? ' active' }}">
+                        <a href="{{ path('locale_update', { 
+                            'lang': 'en',
+                            'route': app.request.attributes.get('_route'),
+                            'params': app.request.attributes.get('_route_params'),
+                            'query': app.request.query.all()
+                        }) }}">
+                            <span>{{ 'nav.lang_en'|trans() }}</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
             {% if app.user %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="dropdown_account" 
@@ -37,6 +66,11 @@
                         <li class="dropdown-item{{ route == 'app_reset_password' ? ' active' }}">
                             <a href="{{ path('app_reset_password', { 'id': app.user.id }) }}">
                                 <i class="fas fa-"></i> {{ 'nav.account_reset_password'|trans() }}
+                            </a>
+                        </li>
+                        <li class="dropdown-item{{ route == 'app_reset_email' ? ' active' }}">
+                            <a href="{{ path('app_reset_email') }}">
+                                <i class="fas fa-"></i> {{ 'nav.account_reset_email'|trans() }}
                             </a>
                         </li>
                         <li class="dropdown-item">

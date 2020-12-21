@@ -1,3 +1,28 @@
+reset_email:
+    title: Modifier votre email
+    h1: Modifier votre email
+    btn:
+        submit: Envoyer
+    flash:
+        check_email: |
+            Un e-mail a été envoyé sur votre nouvel adresse. Il contient un lien sur lequel il vous faudra cliquer pour confirmer votre nouvel email.
+            Si vous ne recevez pas d'email, vérifiez votre dossier spam ou essayez à nouveau.
+        success: L'adresse email a été modifié.
+    email:
+        subject: 'Réinitialisation de votre email'
+        message: |
+            Bonjour %user%,
+            
+            Pour confirmer la modification de votre email, merci de cliquer <a href="%confirmation_url%">ici</a>.
+            
+            Si vous n'êtes pas à l'origine de cette demande, veuillez ne pas tenir compte de ce message.
+            
+            Cordialement,
+            <a href="%host%">%website_name%</a>
+    label:
+        email: Nouveau email
+        password: Mot de passe
+        repeat_email: Répéter le nouveau email
 forget_password:
     title: Mot de passe oublié
     h1: Mot de passe oublié
