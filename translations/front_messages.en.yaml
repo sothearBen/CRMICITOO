@@ -9,3 +9,4 @@ nav:
     account_register: Registration
     account_profile: My profile
     account_reset_password: Reset password
+    account_reset_email: Reset email

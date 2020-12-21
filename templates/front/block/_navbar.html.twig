@@ -68,6 +68,11 @@
                                 <i class="fas fa-"></i> {{ 'nav.account_reset_password'|trans() }}
                             </a>
                         </li>
+                        <li class="dropdown-item{{ route == 'app_reset_email' ? ' active' }}">
+                            <a href="{{ path('app_reset_email') }}">
+                                <i class="fas fa-"></i> {{ 'nav.account_reset_email'|trans() }}
+                            </a>
+                        </li>
                         <li class="dropdown-item">
                             <a href="{{ path('app_logout') }}">
                                 <i class="fas fa-sign-out-alt"></i> {{ 'nav.account_logout'|trans() }}

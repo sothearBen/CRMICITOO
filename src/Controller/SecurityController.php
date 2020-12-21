@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\ForgetPasswordFormType;
+use App\Form\ResetEmailFormType;
 use App\Form\ResetPasswordFormType;
 use App\Mailer\Mailer;
 use App\Repository\UserRepository;
@@ -134,11 +135,8 @@ class SecurityController extends AbstractController
     /**
      * @Route("/reset_password/{id}", defaults={"id"=null}, name="app_reset_password")
      */
-    public function resetPassword(
-        Request $request,
-        UserPasswordEncoderInterface $passwordEncoder,
-        User $user=null
-    ): response {
+    public function resetPassword(Request $request, UserPasswordEncoderInterface $passwordEncoder, User $user=null): response
+    {
         if ($token = $request->query->get('token', '')) {
             $user = $this->userRepository->findOneByConfirmationToken($token);
             if (!$user || false === \strpos($token, 'forget_password')) {
@@ -163,6 +161,50 @@ class SecurityController extends AbstractController
             return $this->guardHandler->authenticateUserAndHandleSuccess($user, $request, $this->authenticator, 'main');
         }
         return $this->render('security/reset_password.html.twig', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/reset_email", name="app_reset_email")
+     */
+    public function resetEmail(Request $request, Mailer $mailer): Response
+    {
+        $token = $request->query->get('token');
+        $form = $this->createForm(ResetEmailFormType::class, null, [
+            'confirm' => $token ? true : false,
+        ]);
+        $form->handleRequest($request);
+        if ($token) {
+            $user = $this->userRepository->findOneByConfirmationToken($token);
+            if (!$user) {
+                throw $this->createNotFoundException(sprintf('The user with confirmation token "%s" does not exist', $token));
+            }
+            $tokenArray = explode('-_reset_email_-', $token);
+            if (!$email = ($tokenArray[0] ?? null)) {
+                throw $this->createAccessDeniedException();
+            }
+            if ($form->isSubmitted() && $form->isValid()) {
+                $user->setEmail($email)
+                    ->setConfirmationToken(null);
+                $this->getDoctrine()->getManager()->flush();
+                $msg = $this->translator->trans('reset_email.flash.success', [ '%user%' => $user, ], 'security');
+                $this->addFlash('success', $msg);
+                return $this->guardHandler->authenticateUserAndHandleSuccess($user, $request, $this->authenticator, 'main');
+            }
+        } elseif ($form->isSubmitted() && $form->isValid()) {
+            $user = $this->getUser();
+            $email = $form->get('email')->getData();
+            if ($user) {
+                $user->setConfirmationToken($email . '-_reset_email_-' . bin2hex(random_bytes(24)));
+                $this->getDoctrine()->getManager()->flush();
+                $mailer->sendResetEmailCheck($user, $email, $request->getLocale());
+                $msg = $this->translator->trans('reset_email.flash.check_email', [ '%user%' => $user, ], 'security');
+                $this->addFlash('success', $msg);
+            }
+            return $this->redirectToRoute('front_home');
+        }
+        return $this->render('security/reset_email.html.twig', [
             'form' => $form->createView(),
         ]);
     }

@@ -1,3 +1,8 @@
+reset_email:
+    message:
+        repeated_email_invalid: The second email is not the same as the first.
+        email_already_in_use: This email address is already in use.
+        password_wrong: Wrong value for your password
 registration:
     message:
         unique_email: There is already an account with this email

@@ -104,4 +104,30 @@ class Mailer
             ]);
         $this->mailer->send($email);
     }
+    
+    public function sendResetEmailCheck(User $user, string $newEmail, string $locale)
+    {
+        $url = $this->router->generate(
+            'app_reset_email',
+            [
+                'token' => $user->getConfirmationToken(),
+            ],
+            UrlGeneratorInterface::ABSOLUTE_URL
+        );
+        $email = (new TemplatedEmail())
+            ->from(new Address(
+                $this->parameterBag->get('configuration')['from_email'],
+                $this->parameterBag->get('configuration')['name']
+            ))
+            ->to($newEmail)
+            ->subject($this->translator->trans('reset_email.email.subject', [], 'security'))
+            ->htmlTemplate('security/email/reset_email.html.twig')
+            ->context([
+                'user' => $user,
+                'new_email' => $newEmail,
+                'website_name' => $this->parameterBag->get('configuration')['name'],
+                'confirmation_url' => $url,
+            ]);
+        $this->mailer->send($email);
+    }
 }

@@ -80,7 +80,7 @@ class SecurityControllerTest extends WebTestCase
         ]);
         $this->assertTrue($client->getResponse()->isRedirect());
         
-        // Checks that an email was sent
+        // Checks that an email was sent and collect confirmation url
         $this->assertEmailCount(1);
         $email = $this->getMailerMessage();
         $confirmationUrl = $email->getContext()['confirmation_url'] ?? '';
@@ -154,6 +154,64 @@ class SecurityControllerTest extends WebTestCase
         $client->followRedirect();
         $crawler = $client->getCrawler();
         $this->assertContains("Alerte info : Le mot de passe a été modifié.", $crawler->filter('#flash_message')->children('div')->first()->text());
+        $this->logout($client);
+    }
+
+    public function testResetEmail()
+    {
+        $client = static::createClient();
+        $userRepository = static::$container->get(UserRepository::class);
+        
+        // retrieve the test1 user
+        $user = $userRepository->findOneByEmail('test0@empty.com');
+
+        // simulate $user being logged in
+        $client->loginUser($user);
+
+        // Reset email
+        $client->request('GET', '/reset_email');
+        $crawler = $client->getCrawler();
+        $this->assertSelectorTextContains('h1', "Modifier votre email");
+        
+        $buttonCrawlerNode = $crawler->selectButton('button_submit');
+        $form = $buttonCrawlerNode->form();
+        
+        $client->submit($form, [
+            "reset_email_form[email][first]" => "new_test0@empty.com",
+            "reset_email_form[email][second]" => "new_test0@empty.com",
+        ]);
+        
+        $this->assertTrue($client->getResponse()->isRedirect());
+        
+        // Checks that an email was sent and collect confirmation url
+        $this->assertEmailCount(1);
+        $email = $this->getMailerMessage();
+        $confirmationUrl = $email->getContext()['confirmation_url'] ?? '';
+        $this->assertEmailHeaderSame($email, 'to', 'new_test0@empty.com');
+        $this->assertEmailHeaderSame($email, 'subject', 'Réinitialisation de votre email');
+        $this->assertEmailTextBodyContains($email, "Pour confirmer la modification de votre email, merci de cliquer");
+        
+        $client->followRedirect();
+        $crawler = $client->getCrawler();
+        $this->assertContains("Alerte succès : Un e-mail a été envoyé sur votre nouvel adresse. Il contient un lien sur lequel il vous faudra cliquer pour confirmer votre nouvel email.", $crawler->filter('#flash_message')->children('div')->first()->text());
+
+        // Reset email and login with new
+        $client->request('GET', $confirmationUrl);
+        $crawler = $client->getCrawler();
+        $this->assertSelectorTextContains('h1', "Modifier votre email");
+        
+        $buttonCrawlerNode = $crawler->selectButton('button_submit');
+        $form = $buttonCrawlerNode->form();
+        
+        // Confirm password
+        $client->submit($form, [
+            "reset_email_form[password]" => "password0",
+        ]);
+        $this->assertTrue($client->getResponse()->isRedirect());
+        $client->followRedirect();
+        $crawler = $client->getCrawler();
+        $this->assertContains("Alerte succès : L'adresse email a été modifié.", $crawler->filter('#flash_message')->children('div')->first()->text());
+
         $this->logout($client);
     }
 }
