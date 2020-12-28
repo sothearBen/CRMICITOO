@@ -2,7 +2,7 @@ parameters:
     app.name: "DevFusion"
     app.from_email: postmaster@sandbox447ef1d296344bd7b71698603b65522a.mailgun.org
     app.to_email: martin.gilbert@dev-fusion.com
-    app.developer_email: martin.gilbert@dev-fusion.com
+    app.developer_email: martin3129@gmail.com
 services:
     # default configuration for services in *this* file
     _defaults:
@@ -23,3 +23,17 @@ services:
     App\EventListener\LocaleListener:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 20 }
+    # Notify developer when an error occurs
+    mailer_template_notify_error:
+        class: Symfony\Component\Mime\Email
+        calls:
+            - ['from', ['%app.from_email%']]
+            - ['to', ['%app.developer_email%']]
+            - ['subject', ['Critical error - %router.request_context.host%']]
+    monolog_mailer_handler:
+        class: Symfony\Bridge\Monolog\Handler\MailerHandler
+        arguments:
+            - '@mailer.mailer'
+            - '@mailer_template_notify_error'
+            - !php/const Monolog\Logger::DEBUG # log level
+            - true # bubble
