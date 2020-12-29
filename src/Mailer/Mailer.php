@@ -65,15 +65,15 @@ class Mailer
         );
         $email = (new TemplatedEmail())
             ->from(new Address(
-                $this->parameterBag->get('configuration')['from_email'],
-                $this->parameterBag->get('configuration')['name']
+                $this->parameterBag->get('app.from_email'),
+                $this->parameterBag->get('app.name')
             ))
             ->to($user->getEmail())
             ->subject($this->translator->trans('registration.email.subject', [ '%user%' => $user ], 'security'))
             ->htmlTemplate('front/email/register.html.twig')
             ->context([
                 'user' => $user,
-                'website_name' => $this->parameterBag->get('configuration')['name'],
+                'website_name' => $this->parameterBag->get('app.name'),
                 'confirmation_url' => $url,
             ]);
         $this->mailer->send($email);
@@ -91,15 +91,15 @@ class Mailer
         );
         $email = (new TemplatedEmail())
             ->from(new Address(
-                $this->parameterBag->get('configuration')['from_email'],
-                $this->parameterBag->get('configuration')['name']
+                $this->parameterBag->get('app.from_email'),
+                $this->parameterBag->get('app.name')
             ))
             ->to($user->getEmail())
             ->subject($this->translator->trans('forget_password.email.subject', [], 'security'))
             ->htmlTemplate('security/email/forget_password.html.twig')
             ->context([
                 'user' => $user,
-                'website_name' => $this->parameterBag->get('configuration')['name'],
+                'website_name' => $this->parameterBag->get('app.name'),
                 'confirmation_url' => $url,
             ]);
         $this->mailer->send($email);
@@ -116,8 +116,8 @@ class Mailer
         );
         $email = (new TemplatedEmail())
             ->from(new Address(
-                $this->parameterBag->get('configuration')['from_email'],
-                $this->parameterBag->get('configuration')['name']
+                $this->parameterBag->get('app.from_email'),
+                $this->parameterBag->get('app.name')
             ))
             ->to($newEmail)
             ->subject($this->translator->trans('reset_email.email.subject', [], 'security'))
@@ -125,7 +125,7 @@ class Mailer
             ->context([
                 'user' => $user,
                 'new_email' => $newEmail,
-                'website_name' => $this->parameterBag->get('configuration')['name'],
+                'website_name' => $this->parameterBag->get('app.name'),
                 'confirmation_url' => $url,
             ]);
         $this->mailer->send($email);
