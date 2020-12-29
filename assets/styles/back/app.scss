@@ -17,4 +17,21 @@ $break-medium: 992px;
 $break-small: 768px;
 
 
-@import '../flash_message';
+@import '../_flash_message';
+@import '../_sidebar';
+
+body {
+    #wrapper {
+        display: flex;
+        position: relative;
+        left: 0;
+        transition: margin-left .3s ease-in-out;
+        align-items: stretch;
+        overflow: hidden;
+    }
+    
+    #content {
+        width: 100%;
+        min-height: 100vh;
+    }
+}

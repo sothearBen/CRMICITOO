@@ -9,9 +9,9 @@
         {% block flash_message %}
             {% include "block/_flash_message.html.twig" %}
         {% endblock %}
-        <div class="wrapper">
+        <div id="wrapper">
             {% block sidebar %}
-                {#{% include "back/block/_sidebar.html.twig" %}#}
+                {% include "back/block/_sidebar.html.twig" %}
             {% endblock %}
             <div id="content">
                 {% block navbar %}

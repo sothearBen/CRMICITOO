@@ -2,10 +2,23 @@
 {% set route = app.request.get('_route') %}
 
 <!-- Sidebar  -->
+<div>
+    <button id="btn_sidebar_show" class="btn btn-primary" aria-label="Open sidebar">
+        <i class="fas fa-2x fa-arrow-right"></i>
+    </button>
+</div>
 <nav id="sidebar">
     <div class="sidebar-header">
-       <div class="logo-sidebar">
-            <img src="{{ asset("build/images/logo-white.png") }}" class="img-fluid" alt="Logo sidebar">
+        <div class="row">
+            <div class="logo-sidebar col-8">
+                <img src="{#{{ asset("build/images/logo.png") }}#}" class="img-fluid" alt="Logo sidebar">
+            </div>
+            <div class="col-4">
+                <button id="btn_sidebar_hide" class="btn btn-outline-primary button btn-sm"
+                    aria-label="Close sidebar">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
         </div>
         <br>
         <div class="row">
