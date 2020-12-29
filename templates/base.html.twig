@@ -6,7 +6,7 @@
         <meta name="author" content="Martin GILBERT">
         <title>{% block title %}{{ 'DevFusion' }}{% endblock %}</title>
         <meta name="description" content="{% block description %}{{ '' }}{% endblock %}" />
-        <link rel="icon" type="image/png" href="{{ asset('build/images/favicon.png')}}" />
+        <link rel="icon" type="image/png" href="{#{{ asset('build/images/favicon.png') }}#}" />
         {% block stylesheets %}{% endblock %}
     </head>
     {% block body %}{% endblock %}
