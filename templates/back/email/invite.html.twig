@@ -1,9 +1,10 @@
-{{ 'invitation.email.message'|trans({
-        '%user%': user,
-        '%email%': user.email,
-        '%password%': password,
-        '%confirmation_url%': confirmation_url,
-        '%host%': app.request.schemeAndHttpHost,
-        '%website_name%': website_name
-    }, 'back_messages')|raw|nl2br
-}}
+{% extends "@email/default/notification/body.html.twig" %}
+
+{% block content %}
+    {{ 'invitation.email.message'|trans({
+            '%user%': user,
+            '%email%': user.email,
+            '%password%': password,
+        }, 'back_messages')|raw|nl2br
+    }}
+{% endblock %}

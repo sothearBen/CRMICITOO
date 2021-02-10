@@ -155,7 +155,7 @@ class Mailer
             ],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        $email = (new TemplatedEmail())
+        $email = (new NotificationEmail())
             ->from(new Address(
                 $this->parameterBag->get('configuration')['from_email'],
                 $this->parameterBag->get('configuration')['name']
@@ -170,10 +170,9 @@ class Mailer
             ->htmlTemplate('back/email/invite.html.twig')
             ->context([
                 'user' => $user,
-                'password' => $password,
-                'website_name' => $this->parameterBag->get('configuration')['name'],
-                'confirmation_url' => $url,
-            ]);
+                'password' => $password, 
+            ])
+            ->action($this->translator->trans('invitation.email.action', [], 'back_messages'), $url);
         $this->mailer->send($email);
     }
 }

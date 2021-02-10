@@ -4,17 +4,15 @@ invitation:
         message: |
             Bonjour %user%,
             
-            Vous avez été invité à rejoindre %website_name% par un administrateur.
+            Vous avez été invité à nous rejoindre.
             
             Identifiant : %email%
             Mot de passe : %password%
 
-            Pour valider l'invitation, merci de cliquer <a href="%confirmation_url%">ici</a>.
+            Pour valider l'invitation, merci de cliquer sur le lien suivant.
 
             Ce lien ne peut être utilisé qu'une seule fois pour valider votre compte.
-
-            Cordialement,
-            <a href="%host%">%website_name%</a>
+        action: Valider
 nav:
     home: Accueil Front
     end_switch: Fin de l'exploration

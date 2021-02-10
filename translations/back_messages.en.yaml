@@ -4,17 +4,15 @@ invitation:
         message: |
             Hello %user%,
 
+            You have been invited to join us. 
+
             Email : %email%
             Password : %password%
             
-            To finish activating your account - please click <a href="%confirmation_url%">here</a>.
+            To finish activating your account - please click on the following link.
 
             This link can only be used once to validate your account.
-
-            Regards,
-            
-            <a href="%host%">%website_name%</a>
-nav:
+        action: Validate
     home: Home Front
     end_switch: End switch
     account: Account

@@ -8156,12 +8156,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/official-dev-fusion/MakerBundle.git",
-                "reference": "4bd788b9f13055b2b3572c4acd11edecef19c9c0"
+                "reference": "c6cf3a752128f7a5fa9b77f7c429817cfa8fdda9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/official-dev-fusion/MakerBundle/zipball/4bd788b9f13055b2b3572c4acd11edecef19c9c0",
-                "reference": "4bd788b9f13055b2b3572c4acd11edecef19c9c0",
+                "url": "https://api.github.com/repos/official-dev-fusion/MakerBundle/zipball/c6cf3a752128f7a5fa9b77f7c429817cfa8fdda9",
+                "reference": "c6cf3a752128f7a5fa9b77f7c429817cfa8fdda9",
                 "shasum": ""
             },
             "require": {
@@ -8216,7 +8216,7 @@
                 "issues": "https://github.com/official-dev-fusion/MakerBundle/issues",
                 "source": "https://github.com/official-dev-fusion/MakerBundle/tree/master"
             },
-            "time": "2021-02-02T14:36:22+00:00"
+            "time": "2021-02-10T09:39:30+00:00"
         },
         {
             "name": "doctrine/data-fixtures",
