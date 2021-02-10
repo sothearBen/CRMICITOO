@@ -83,7 +83,7 @@ class SecurityControllerTest extends WebTestCase
         // Checks that an email was sent and collect confirmation url
         $this->assertEmailCount(1);
         $email = $this->getMailerMessage();
-        $confirmationUrl = $email->getContext()['confirmation_url'] ?? '';
+        $confirmationUrl = $email->getContext()['action_url'] ?? '';
         $this->assertEmailHeaderSame($email, 'to', 'martin3129@gmail.com');
         $this->assertEmailHeaderSame($email, 'subject', 'Réinitialisation de votre mot de passe');
         
@@ -104,7 +104,7 @@ class SecurityControllerTest extends WebTestCase
             "reset_password_form[plainPassword][second]" => "wrong_password",
         ]);
         
-        $this->assertSelectorTextContains('label[for=reset_password_form_plainPassword_first]', "Nouveau mot de passe Erreur Les champs du nouveau mot de passe doivent correspondre");
+        $this->assertSelectorTextContains('label[for=reset_password_form_plainPassword_first] + ul:first-child', "Les champs du nouveau mot de passe doivent correspondre");
         
         // Submit form with new_password
         $client->submit($form, [
@@ -143,7 +143,7 @@ class SecurityControllerTest extends WebTestCase
             "reset_password_form[plainPassword][first]" => "password",
             "reset_password_form[plainPassword][second]" => "password",
         ]);
-        $this->assertSelectorTextContains('label[for=reset_password_form_password]', "Ancien mot de passe Erreur Votre mot de passe actuel n'est pas valide");
+        $this->assertSelectorTextContains('label[for=reset_password_form_password] + ul:first-child', "Votre mot de passe actuel n'est pas valide");
         
         $client->submit($form, [
             "reset_password_form[password]" => "password1",
@@ -186,10 +186,9 @@ class SecurityControllerTest extends WebTestCase
         // Checks that an email was sent and collect confirmation url
         $this->assertEmailCount(1);
         $email = $this->getMailerMessage();
-        $confirmationUrl = $email->getContext()['confirmation_url'] ?? '';
+        $confirmationUrl = $email->getContext()['action_url'] ?? '';
         $this->assertEmailHeaderSame($email, 'to', 'new_test0@empty.com');
         $this->assertEmailHeaderSame($email, 'subject', 'Réinitialisation de votre email');
-        $this->assertEmailTextBodyContains($email, "Pour confirmer la modification de votre email, merci de cliquer");
         
         $client->followRedirect();
         $crawler = $client->getCrawler();
