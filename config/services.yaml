@@ -1,6 +1,6 @@
 parameters:
     app.name: "DevFusion"
-    app.from_email: postmaster@sandbox447ef1d296344bd7b71698603b65522a.mailgun.org
+    app.from_email: martin.gilbert@dev-fusion.com
     app.to_email: martin.gilbert@dev-fusion.com
     app.developer_email: martin3129@gmail.com
 services:
