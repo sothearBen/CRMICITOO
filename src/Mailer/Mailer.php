@@ -3,13 +3,13 @@
 namespace App\Mailer;
 
 use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Twig\Environment;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use App\Entity\User;
 use App\Repository\UserRepository;
+use Symfony\Bridge\Twig\Mime\NotificationEmail;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class Mailer
@@ -63,7 +63,7 @@ class Mailer
             ],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        $email = (new TemplatedEmail())
+        $email = (new NotificationEmail())
             ->from(new Address(
                 $this->parameterBag->get('app.from_email'),
                 $this->parameterBag->get('app.name')
@@ -73,9 +73,14 @@ class Mailer
             ->htmlTemplate('front/email/register.html.twig')
             ->context([
                 'user' => $user,
-                'website_name' => $this->parameterBag->get('app.name'),
-                'confirmation_url' => $url,
-            ]);
+                'footer_text' => $this->parameterBag->get('app.name'),
+                'footer_url' => $this->router->generate(
+                    'front_home',
+                    [],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                )
+            ])
+            ->action($this->translator->trans('registration.email.action', [], 'security'), $url);
         $this->mailer->send($email);
     }
 
@@ -89,7 +94,7 @@ class Mailer
             ],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        $email = (new TemplatedEmail())
+        $email = (new NotificationEmail())
             ->from(new Address(
                 $this->parameterBag->get('app.from_email'),
                 $this->parameterBag->get('app.name')
@@ -99,9 +104,14 @@ class Mailer
             ->htmlTemplate('security/email/forget_password.html.twig')
             ->context([
                 'user' => $user,
-                'website_name' => $this->parameterBag->get('app.name'),
-                'confirmation_url' => $url,
-            ]);
+                'footer_text' => $this->parameterBag->get('app.name'),
+                'footer_url' => $this->router->generate(
+                    'front_home',
+                    [],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                )
+            ])
+            ->action($this->translator->trans('forget_password.email.action', [], 'security'), $url);
         $this->mailer->send($email);
     }
     
@@ -114,7 +124,7 @@ class Mailer
             ],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        $email = (new TemplatedEmail())
+        $email = (new NotificationEmail())
             ->from(new Address(
                 $this->parameterBag->get('app.from_email'),
                 $this->parameterBag->get('app.name')
@@ -125,9 +135,14 @@ class Mailer
             ->context([
                 'user' => $user,
                 'new_email' => $newEmail,
-                'website_name' => $this->parameterBag->get('app.name'),
-                'confirmation_url' => $url,
-            ]);
+                'footer_text' => $this->parameterBag->get('app.name'),
+                'footer_url' => $this->router->generate(
+                    'front_home',
+                    [],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                )
+            ])
+            ->action($this->translator->trans('reset_email.email.action', [], 'security'), $url);
         $this->mailer->send($email);
     }
 
@@ -140,7 +155,7 @@ class Mailer
             ],
             UrlGeneratorInterface::ABSOLUTE_URL
         );
-        $email = (new TemplatedEmail())
+        $email = (new NotificationEmail())
             ->from(new Address(
                 $this->parameterBag->get('configuration')['from_email'],
                 $this->parameterBag->get('configuration')['name']
@@ -155,10 +170,9 @@ class Mailer
             ->htmlTemplate('back/email/invite.html.twig')
             ->context([
                 'user' => $user,
-                'password' => $password,
-                'website_name' => $this->parameterBag->get('configuration')['name'],
-                'confirmation_url' => $url,
-            ]);
+                'password' => $password, 
+            ])
+            ->action($this->translator->trans('invitation.email.action', [], 'back_messages'), $url);
         $this->mailer->send($email);
     }
 }

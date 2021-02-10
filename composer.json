@@ -6,7 +6,9 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "studio-42/elfinder": "^2.1",
+        "async-aws/ses": "^1.3",
         "sensio/framework-extra-bundle": "^5.2",
+        "symfony/amazon-mailer": "^5.2",
         "symfony/asset": "5.2.*",
         "symfony/console": "5.2.*",
         "symfony/dotenv": "5.2.*",
@@ -28,9 +30,12 @@
         "symfony/validator": "5.2.*",
         "symfony/web-link": "5.2.*",
         "symfony/webpack-encore-bundle": "^1.7",
-        "twig/extra-bundle": "^3.0",
+        "symfony/yaml": "5.2.*",
+        "twig/cssinliner-extra": "^3.3",
+        "twig/extra-bundle": "^3.3",
+        "twig/inky-extra": "^3.3",
         "twig/intl-extra": "^3.0",
-        "symfony/yaml": "5.2.*"
+        "twig/markdown-extra": "^3.3"
     },
     "require-dev": {
         "devfusion/maker-bundle": "1.1.x-dev",
