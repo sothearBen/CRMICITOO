@@ -8,10 +8,8 @@ reset_email:
         message: |
             Hello %user%,
 
-            To confirm the update of your email - please click <a href="%confirmation_url%">here</a>.
-
-            Regards,
-            <a href="%host%">%website_name%</a>
+            To confirm the update of your email - please click on the following link.
+        action: Update
     flash:
         check_email: |
             An email has been sent to your new address.. It contains a link you must click to confirm your new address.
@@ -31,10 +29,8 @@ forget_password:
         message: |
             Hello %user%,
 
-            To reset your password - please click <a href="%confirmation_url%">here</a>.
-
-            Regards,
-            <a href="%host%">%website_name%</a>
+            To reset your password - please click on the following link. 
+        action: Reset
     flash:
         check_email: |
             An email has been sent. It contains a link you must click to reset your password.
@@ -69,12 +65,10 @@ registration:
         message: |
             Hello %user%,
 
-            To finish activating your account - please click <a href="%confirmation_url%">here</a>.
+            To finish activating your account - please click on the following link.
 
             This link can only be used once to validate your account.
-
-            Regards,
-            <a href="%host%">%website_name%</a>
+        action: Finish activating 
     flash:
         check_email: |
             An email has been sent to %email%. It contains an activation link you must click to activate your account.
