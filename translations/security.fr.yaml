@@ -13,12 +13,10 @@ reset_email:
         message: |
             Bonjour %user%,
             
-            Pour confirmer la modification de votre email, merci de cliquer <a href="%confirmation_url%">ici</a>.
+            Pour confirmer la modification de votre email, merci de cliquer sur le lien suivant.
             
             Si vous n'êtes pas à l'origine de cette demande, veuillez ne pas tenir compte de ce message.
-            
-            Cordialement,
-            <a href="%host%">%website_name%</a>
+        action: Confirmer 
     label:
         email: Nouveau email
         password: Mot de passe
@@ -37,14 +35,12 @@ forget_password:
         message: |
             Bonjour %user%,
             
-            Pour réinitialiser votre mot de passe, merci de cliquer <a href="%confirmation_url%">ici</a>.
+            Pour réinitialiser votre mot de passe, merci de cliquer sur le lien suivant.
             
             Ce lien ne peut être utilisé qu'une seule fois.
             
             Si vous n'êtes pas à l'origine de cette demande, veuillez ne pas tenir compte de ce message.
-            
-            Cordialement,
-            <a href="%host%">%website_name%</a>
+        action: Réinitialiser    
     label:
         email: Email
 login:
@@ -75,12 +71,10 @@ registration:
         message: |
             Bonjour %user%,
 
-            Pour valider votre compte utilisateur, merci de cliquer <a href="%confirmation_url%">ici</a>.
+            Pour valider votre compte utilisateur, merci de cliquer sur le lien suivant.
 
             Ce lien ne peut être utilisé qu'une seule fois pour valider votre compte.
-
-            Cordialement,
-            <a href="%host%">%website_name%</a>
+        action: Valider
     flash:
         check_email: Un e-mail a été envoyé à l'adresse %email%. Il contient un lien d'activation sur lequel il vous faudra cliquer afin d'activer votre compte.
         confirmed: Félicitations %user%, votre compte est maintenant activé.

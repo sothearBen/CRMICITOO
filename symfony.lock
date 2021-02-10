@@ -112,19 +112,22 @@
         "version": "2.1.11"
     },
     "friendsofphp/proxy-manager-lts": {
-        "version": "v1.0.1"
+        "version": "v1.0.3"
     },
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
     "laminas/laminas-code": {
-        "version": "3.4.1"
+        "version": "4.0.0"
     },
     "laminas/laminas-eventmanager": {
-        "version": "3.2.1"
+        "version": "3.3.0"
     },
     "laminas/laminas-zendframework-bridge": {
         "version": "1.1.1"
+    },
+    "lorenzo/pinky": {
+        "version": "1.0.5"
     },
     "monolog/monolog": {
         "version": "1.25.1"
@@ -417,7 +420,7 @@
         "version": "v4.3.5"
     },
     "symfony/proxy-manager-bridge": {
-        "version": "v5.2.1"
+        "version": "v5.2.3"
     },
     "symfony/routing": {
         "version": "4.2",
@@ -495,16 +498,16 @@
         "version": "v4.3.5"
     },
     "symfony/twig-bundle": {
-        "version": "3.3",
+        "version": "5.0",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "master",
-            "version": "3.3",
-            "ref": "7e5911186d596214c14dd28305485a3c143ee746"
+            "version": "5.0",
+            "ref": "fab9149bbaa4d5eca054ed93f9e1b66cc500895d"
         },
         "files": [
+            "./config/packages/test/twig.yaml",
             "./config/packages/twig.yaml",
-            "./config/routes/dev/twig.yaml",
             "./templates/base.html.twig"
         ]
     },
@@ -578,11 +581,23 @@
     "symfony/yaml": {
         "version": "v4.3.5"
     },
+    "tijsverkoyen/css-to-inline-styles": {
+        "version": "2.2.3"
+    },
+    "twig/cssinliner-extra": {
+        "version": "v3.3.0"
+    },
     "twig/extra-bundle": {
-        "version": "v3.0.1"
+        "version": "v3.3.0"
+    },
+    "twig/inky-extra": {
+        "version": "v3.3.0"
     },
     "twig/intl-extra": {
-        "version": "v3.1.1"
+        "version": "v3.3.0"
+    },
+    "twig/markdown-extra": {
+        "version": "v3.3.0"
     },
     "twig/twig": {
         "version": "v2.12.1"

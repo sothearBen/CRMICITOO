@@ -38,7 +38,7 @@ class FrontRegistrationControllerTest extends WebTestCase
 
         
         $email = $this->getMailerMessage();
-        $confirmationUrl = $email->getContext()['confirmation_url'] ?? '';
+        $confirmationUrl = $email->getContext()['action_url'] ?? '';
         $this->assertEmailHeaderSame($email, 'to', 'martin3129@gmail.com');
         $this->assertEmailHeaderSame($email, 'subject', 'Bienvenue Martin GILBERT');
         
