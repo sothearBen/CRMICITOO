@@ -2,8 +2,8 @@
 
 namespace App\Form\Back;
 
-use App\Entity\User;
-use App\Manager\Back\UserManager;
+use App\Entity\Config;
+use App\Manager\Back\ConfigManager;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -13,25 +13,25 @@ use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class UserBatchType extends AbstractType
+class ConfigBatchType extends AbstractType
 {
     /**
-     * @var UserManager     */
-    private $userManager;
+     * @var ConfigManager     */
+    private $configManager;
 
-    public function __construct(UserManager $userManager)
+    public function __construct(ConfigManager $configManager)
     {
-        $this->userManager = $userManager;
+        $this->configManager = $configManager;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('users', EntityType::class, [
+            ->add('configs', EntityType::class, [
                 'label' => false,
                 'choice_label' => false,
-                'class' => User::class,
-                'choices' => $options['users'],
+                'class' => Config::class,
+                'choices' => $options['configs'],
                 'expanded' => true,
                 'multiple' => true,
             ])
@@ -40,12 +40,11 @@ class UserBatchType extends AbstractType
                 'placeholder' => 'Action',
                 'choices' => [
                     'action.delete' => 'delete',
-                    'action.permute_enabled' => 'permute_enabled',
                 ],
                 'multiple' => false,
             ])
             ->addEventListener(FormEvents::POST_SUBMIT, function (FormEvent $event) {
-                $result = $this->userManager->validationBatchForm($event->getForm());
+                $result = $this->configManager->validationBatchForm($event->getForm());
                 if (true !== $result) {
                     $event->getForm()->addError(new FormError($result));
                 }
@@ -55,7 +54,7 @@ class UserBatchType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'users' => null,
+            'configs' => null,
             'translation_domain' => 'back_messages',
         ]);
     }

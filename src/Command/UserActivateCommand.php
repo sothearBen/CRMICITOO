@@ -2,28 +2,23 @@
 
 namespace App\Command;
 
-use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class UserActivateCommand extends Command
 {
-
     /**
-     *
      * @var EntityManagerInterface
      */
     private $em;
-    
+
     /**
-     *
      * @var UserRepository
      */
     private $userRepository;
@@ -34,7 +29,7 @@ class UserActivateCommand extends Command
         $this->userRepository = $userRepository;
         parent::__construct();
     }
-    
+
     protected static $defaultName = 'app:user:activate';
 
     protected function configure()
@@ -68,7 +63,7 @@ class UserActivateCommand extends Command
             });
             $questions['email'] = $question;
         }
-        
+
         foreach ($questions as $name => $question) {
             $answer = $this->getHelper('question')->ask($input, $output, $question);
             $input->setArgument($name, $answer);
@@ -80,10 +75,11 @@ class UserActivateCommand extends Command
         $io = new SymfonyStyle($input, $output);
         $email = $input->getArgument('email');
         $user = $this->userRepository->findOneByEmail($email);
-        
+
         $user->setEnabled(true);
         $this->em->flush();
         $io->success(sprintf('User "%s" has been activated.', $email));
+
         return 0;
     }
 }

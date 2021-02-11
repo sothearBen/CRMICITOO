@@ -26,6 +26,7 @@ sidebar:
     user: Utilisateur
     user_search: Liste
     user_create: Inviter
+    config: Config
 action:
     delete: Supprimer
     update: Modifier
@@ -105,3 +106,38 @@ user:
         h2: 'Formulaire de modification'
         title: 'Modifier - Utilisateur'
 'yes': Oui
+config:
+    create:
+        flash:
+            success: 'Config créée (%identifier%).'
+        h1: 'Créer - Config'
+        h2: 'Formulaire de création'
+        title: 'Créer - Config'
+    delete:
+        flash:
+            success: 'Config(s) supprimée(s).'
+        h1: 'Supprimer - Config'
+        h2: 'La liste suivante sera supprimée'
+        modal_title: 'Supprimer - Config'
+    field:
+        name: Nom
+        type: Type
+        value: Valeur
+    label:
+        name: Nom
+        type: Type
+        value: Valeur
+    read:
+        h1: 'Détails - Config'
+        h2: Détails
+        title: 'Détails - Config'
+    search:
+        h1: 'Rechercher - Config'
+        h2: Rechercher
+        title: 'Rechercher - Config'
+    update:
+        flash:
+            success: 'Config modifié.'
+        h1: 'Modifier - Config'
+        h2: 'Formulaire de modification'
+        title: 'Modifier - Config'

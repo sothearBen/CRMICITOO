@@ -13,6 +13,7 @@ class LocaleControllerTest extends WebTestCase
         $client->getResponse()->isRedirect();
         $client->followRedirect();
         $crawler = $client->getCrawler();
+
         $classes = $crawler->selectLink('Français')->parents()->attr('class');
         $this->assertContains('active', $classes);
 

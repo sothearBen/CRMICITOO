@@ -25,6 +25,7 @@ sidebar:
     user: Utilisateur
     user_search: List
     user_create: Invite
+    config: Config
 action:
     delete: Delete
     update: Update
@@ -104,3 +105,38 @@ user:
         h2: 'Update form'
         title: 'Update - User'
 'yes': 'Yes'
+config:
+    create:
+        flash:
+            success: 'Config created (%identifier%).'
+        h1: 'Create - Config'
+        h2: 'Create form'
+        title: 'Create - Config'
+    delete:
+        flash:
+            success: 'Config deleted.'
+        h1: 'Delete - Config'
+        h2: 'The following list will be deleted'
+        modal_title: 'Delete - Config'
+    field:
+        name: Name
+        type: Type
+        value: Value
+    label:
+        name: name
+        type: Type
+        value: Value
+    read:
+        h1: 'Details - Config'
+        h2: Details
+        title: 'Details - Config'
+    search:
+        h1: 'Search - Config'
+        h2: Search
+        title: 'Search - Config'
+    update:
+        flash:
+            success: 'Config updated.'
+        h1: 'Update - Config'
+        h2: 'Update form'
+        title: 'Update - Config'

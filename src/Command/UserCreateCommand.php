@@ -10,31 +10,27 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserCreateCommand extends Command
 {
-
     /**
-     *
      * @var UserPasswordEncoderInterface
      */
     private $passwordEncoder;
 
     /**
-     *
      * @var EntityManagerInterface
      */
     private $em;
-    
+
     /**
-     *
      * @var UserRepository
      */
     private $userRepository;
-    
+
     public function __construct(UserPasswordEncoderInterface $passwordEncoder, EntityManagerInterface $em, UserRepository $userRepository)
     {
         $this->passwordEncoder = $passwordEncoder;
@@ -147,13 +143,13 @@ class UserCreateCommand extends Command
                 $input->getArgument('password')
             )
         );
-        
+
         if ($input->getOption('inactive')) {
             $user->setEnabled(false);
         } else {
             $user->setEnabled(true);
         }
-        
+
         if ($input->getOption('super-admin')) {
             $user->setRoles(['ROLE_SUPER_ADMIN']);
         }
