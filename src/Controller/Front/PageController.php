@@ -13,7 +13,6 @@ class PageController extends AbstractController
     public function index()
     {
         return $this->render('front/page/index.html.twig', [
-            
         ]);
     }
 }

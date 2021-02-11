@@ -73,7 +73,7 @@ class User implements UserInterface
 
     public function __toString()
     {
-        return ucfirst($this->getFirstname())." ".mb_strtoupper($this->getLastname());
+        return ucfirst($this->getFirstname()).' '.mb_strtoupper($this->getLastname());
     }
 
     /**
