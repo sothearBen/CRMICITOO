@@ -2,15 +2,14 @@
 
 namespace App\Form;
 
-use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
-use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ResetPasswordFormType extends AbstractType
 {
@@ -32,7 +31,7 @@ class ResetPasswordFormType extends AbstractType
                         ]),
                         new UserPassword([
                             'message' => 'reset_password.message.current_password_wrong',
-                        ])
+                        ]),
                     ],
                 ])
             ;
@@ -43,7 +42,7 @@ class ResetPasswordFormType extends AbstractType
                 'invalid_message' => 'reset_password.message.repeated_new_password_invalid',
                 'options' => ['attr' => ['class' => 'password-field']],
                 'required' => true,
-                'first_options'  => ['label' => 'reset_password.label.new_password'],
+                'first_options' => ['label' => 'reset_password.label.new_password'],
                 'second_options' => ['label' => 'reset_password.label.repeat_new_password'],
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
