@@ -25,6 +25,7 @@ sidebar:
     user: Utilisateur
     user_search: List
     user_create: Invite
+    contact_message: Contact form
     config: Config
 action:
     delete: Delete
@@ -140,3 +141,31 @@ config:
         h1: 'Update - Config'
         h2: 'Update form'
         title: 'Update - Config'
+contact_message:
+    create:
+        flash:
+            success: 'Contact message created (%identifier%).'
+        h1: 'Create - Contact message'
+        h2: 'Create form'
+        title: 'Create - Contact message'
+    delete:
+        flash:
+            success: 'Contact message(s) deleted.'
+        h1: 'Delete - Contact message'
+        h2: 'The following list will be deleted'
+        modal_title: 'Delete - Contact message'
+    field:
+        created_at: 'Created At'
+        email: Email
+        firstname: Firstname
+        lastname: Lastname
+        message: Message
+        subject: Subject
+    read:
+        h1: 'Details - Contact message'
+        h2: Details
+        title: 'Details - Contact message'
+    search:
+        h1: 'Search - Contact message'
+        h2: Search
+        title: 'Search - Contact message'

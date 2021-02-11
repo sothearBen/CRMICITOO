@@ -61,6 +61,9 @@
                 
             </ul>
         </li>
+        <li class="{{ route == 'back_contact_message_search' ? 'active' }}">
+            <a href="{{ path('back_contact_message_search') }}">{{ 'sidebar.contact_message'|trans() }}</a>
+        </li>
         <li class="{{ route == 'back_config_search' ? 'active' }}">
             <a href="{{ path('back_config_search') }}">{{ 'sidebar.config'|trans() }}</a>
         </li>

@@ -26,6 +26,7 @@ sidebar:
     user: Utilisateur
     user_search: Liste
     user_create: Inviter
+    contact_message: Formulaire de contact
     config: Config
 action:
     delete: Supprimer
@@ -141,3 +142,26 @@ config:
         h1: 'Modifier - Config'
         h2: 'Formulaire de modification'
         title: 'Modifier - Config'
+contact_message:
+    delete:
+        flash:
+            success: 'Contact message(s) supprimé.'
+        h1: 'Supprimer - Contact message'
+        h2: 'La liste suivante sera supprimée'
+        modal_title: 'Supprimer - Contact message'
+    field:
+        created_at: 'Date'
+        email: Email
+        phone: Téléphone
+        firstname: Prénom
+        lastname: Nom
+        message: Message
+        subject: Objet
+    read:
+        h1: 'Détails - Contact message'
+        h2: Détails
+        title: 'Détails - Contact message'
+    search:
+        h1: 'Rechercher - Contact message'
+        h2: Rechercher
+        title: 'Rechercher - Contact message'

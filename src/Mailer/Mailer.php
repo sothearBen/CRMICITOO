@@ -2,6 +2,7 @@
 
 namespace App\Mailer;
 
+use App\Entity\ContactMessage;
 use App\Entity\User;
 use App\Repository\ConfigRepository;
 use Symfony\Bridge\Twig\Mime\NotificationEmail;
@@ -158,8 +159,8 @@ class Mailer
         );
         $email = (new NotificationEmail())
             ->from(new Address(
-                $this->parameterBag->get('configuration')['from_email'],
-                $this->parameterBag->get('configuration')['name']
+                $this->fromEmail,
+                $this->appConfig['name'],
             ))
             ->to($user->getEmail())
             ->subject(
@@ -174,6 +175,35 @@ class Mailer
                 'password' => $password,
             ])
             ->action($this->translator->trans('invitation.email.action', [], 'back_messages'), $url);
+        $this->mailer->send($email);
+    }
+
+    public function sendContactMessage(ContactMessage $contactMessage)
+    {
+        $email = (new NotificationEmail())
+            ->from(new Address(
+                $this->fromEmail,
+                $this->appConfig['name'],
+            ))
+            ->to($this->appConfig['admin_email'])
+            ->subject('🔔 Notification - Message')
+            ->htmlTemplate('front/email/contact_message.html.twig')
+            ->context([
+                'contact_message' => $contactMessage,
+                'footer_text' => $this->appConfig['name'],
+                'footer_url' => $this->router->generate(
+                    'front_home',
+                    [],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                ),
+            ])
+            ->action("Cliquer ici pour l'ouvrir dans l'application", $this->router->generate(
+                'back_contact_message_read',
+                ['id' => $contactMessage->getId()],
+                UrlGeneratorInterface::ABSOLUTE_URL
+            ))
+            ->importance(NotificationEmail::IMPORTANCE_MEDIUM)
+            ->replyTo($contactMessage->getEmail());
         $this->mailer->send($email);
     }
 }

@@ -1,6 +1,9 @@
 parameters:
     app.from_email: martin.gilbert@dev-fusion.com
-    app.developer_email: martin3129@gmail.com
+    app.developer_email: martin.gilbert@dev-fusion.com
+    app.recaptcha3.url: '%env(RECAPTCHA3_URL)%'
+    app.recaptcha3.secret: '%env(RECAPTCHA3_SECRET)%'
+    app.recaptcha3.site_key: '%env(RECAPTCHA3_SITE_KEY)%'
 services:
     # default configuration for services in *this* file
     _defaults:
