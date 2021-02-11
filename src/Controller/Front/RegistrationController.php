@@ -14,7 +14,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RegistrationController extends AbstractController
 {
-
     /**
      * @var TranslatorInterface
      */
@@ -24,7 +23,7 @@ class RegistrationController extends AbstractController
     {
         $this->translator = $translator;
     }
-    
+
     /**
      * @Route("/register", name="front_register")
      */
@@ -44,16 +43,16 @@ class RegistrationController extends AbstractController
             );
 
             $user->setEnabled(false);
-            $user->setConfirmationToken('register_' . bin2hex(random_bytes(24)));
+            $user->setConfirmationToken('register_'.bin2hex(random_bytes(24)));
             $user->setLastLoginAt(new \DateTime());
-            
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
             $entityManager->flush();
 
             $mailer->sendRegistration($user, $request->getLocale());
 
-            $msg = $this->translator->trans('registration.flash.check_email', [ '%email%' => $user->getEmail(), ], 'security');
+            $msg = $this->translator->trans('registration.flash.check_email', ['%email%' => $user->getEmail()], 'security');
             $this->addFlash('info', $msg);
 
             return $this->redirectToRoute('app_login');

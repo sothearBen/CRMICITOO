@@ -2,7 +2,6 @@
 
 namespace App\Form;
 
-use App\Entity\User;
 use App\Repository\UserRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
@@ -13,9 +12,9 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ResetEmailFormType extends AbstractType
@@ -47,7 +46,7 @@ class ResetEmailFormType extends AbstractType
                         ]),
                         new UserPassword([
                             'message' => 'reset_email.message.password_wrong',
-                        ])
+                        ]),
                     ],
                 ])
             ;
@@ -56,7 +55,7 @@ class ResetEmailFormType extends AbstractType
                 ->add('email', RepeatedType::class, [
                     'type' => EmailType::class,
                     'invalid_message' => 'reset_email.message.repeated_email_invalid',
-                    'first_options'  => ['label' => 'reset_email.label.email'],
+                    'first_options' => ['label' => 'reset_email.label.email'],
                     'second_options' => ['label' => 'reset_email.label.repeat_email'],
                     'required' => true,
                 ])

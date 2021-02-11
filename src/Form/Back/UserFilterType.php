@@ -3,20 +3,17 @@
 namespace App\Form\Back;
 
 use App\Manager\UserManager;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
-use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Role\RoleHierarchyInterface;
-use Symfony\Component\Security\Core\Role\Role;
 
 class UserFilterType extends AbstractType
 {
-
     /**
-     *
      * @var RoleHierarchyInterface
      */
     private $roleHierarchy;
@@ -28,7 +25,7 @@ class UserFilterType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $reachableRoleNames = $this->roleHierarchy->getReachableRoleNames([ 'ROLE_ADMIN', ]);
+        $reachableRoleNames = $this->roleHierarchy->getReachableRoleNames(['ROLE_ADMIN']);
         $roles = [];
         foreach ($reachableRoleNames as $reachableRoleName) {
             $roles[$reachableRoleName] = $reachableRoleName;
@@ -66,7 +63,7 @@ class UserFilterType extends AbstractType
             'translation_domain' => 'back_messages',
         ]);
     }
-    
+
     public function getBlockPrefix()
     {
         return 'filter';

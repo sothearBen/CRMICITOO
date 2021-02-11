@@ -2,28 +2,23 @@
 
 namespace App\Command;
 
-use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 class UserPromoteCommand extends Command
 {
-
     /**
-     *
      * @var EntityManagerInterface
      */
     private $em;
-    
+
     /**
-     *
      * @var UserRepository
      */
     private $userRepository;
@@ -34,7 +29,7 @@ class UserPromoteCommand extends Command
         $this->userRepository = $userRepository;
         parent::__construct();
     }
-    
+
     protected static $defaultName = 'app:user:promote';
 
     protected function configure()
@@ -55,7 +50,7 @@ class UserPromoteCommand extends Command
 
     protected function interact(InputInterface $input, OutputInterface $output)
     {
-        $questions = array();
+        $questions = [];
 
         if (!$input->getArgument('email')) {
             $question = new Question('Please give the email:');
@@ -97,17 +92,19 @@ class UserPromoteCommand extends Command
         $email = $input->getArgument('email');
         $role = $input->getArgument('role');
         $user = $this->userRepository->findOneByEmail($email);
-        
+
         $roles = $user->getRoles();
-        
+
         if (in_array($role, $roles)) {
-            $io->error(sprintf("The user %s has already role %s", $email, $role));
+            $io->error(sprintf('The user %s has already role %s', $email, $role));
+
             return 1;
         } else {
             $roles[] = $role;
             $user->setRoles($roles);
             $this->em->flush();
             $io->success(sprintf('The role %s has been added to the user %s.', $role, $email));
+
             return 0;
         }
     }
