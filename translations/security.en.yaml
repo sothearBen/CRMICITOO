@@ -4,7 +4,7 @@ reset_email:
     btn:
         submit: Send
     email:
-        subject: 'Reset email'
+        subject: '🔔 Reset email'
         message: |
             Hello %user%,
 
@@ -25,7 +25,7 @@ forget_password:
     btn:
         submit: Send
     email:
-        subject: 'Reset Password'
+        subject: '🔔 Reset Password'
         message: |
             Hello %user%,
 
@@ -61,7 +61,7 @@ registration:
     btn:
         submit: Register
     email:
-        subject: Welcome %user%
+        subject: '🔔 Welcome %user%'
         message: |
             Hello %user%,
 
