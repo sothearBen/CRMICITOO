@@ -41,7 +41,7 @@ class Mailer
     protected $fromEmail;
 
     /**
-     * @var array
+     * Mailer constructor.
      */
     protected $appConfig;
 
@@ -164,10 +164,7 @@ class Mailer
             ))
             ->to($user->getEmail())
             ->subject(
-                $this->translator->trans('invitation.email.subject', [
-                    '%user%' => $user,
-                    '%website_name%' => $this->parameterBag->get('configuration')['name'],
-                ], 'back_messages')
+                $this->translator->trans('invitation.email.subject', [], 'back_messages')
             )
             ->htmlTemplate('back/email/invite.html.twig')
             ->context([

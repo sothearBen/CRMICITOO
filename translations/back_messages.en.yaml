@@ -1,6 +1,6 @@
 invitation:
     email:
-        subject: '%website_name% - Invitation'
+        subject: '🔔 Invitation'
         message: |
             Hello %user%,
 
