@@ -1,0 +1,13 @@
+symfony console doctrine:fixtures:load -n -e test
+
+   > purging database
+   > loading App\DataFixtures\AppFixtures
+symfony php bin/phpunit
+PHPUnit 7.5.20 by Sebastian Bergmann and contributors.
+
+Testing Project Test Suite
+......                                                              6 / 6 (100%)
+
+Time: 7.22 seconds, Memory: 72.00 MB
+
+[30;42mOK (6 tests, 68 assertions)[0m
