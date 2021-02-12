@@ -9,7 +9,7 @@ reset_email:
             Si vous ne recevez pas d'email, vérifiez votre dossier spam ou essayez à nouveau.
         success: L'adresse email a été modifié.
     email:
-        subject: 'Réinitialisation de votre email'
+        subject: '🔔 Réinitialisation de votre email'
         message: |
             Bonjour %user%,
             
@@ -31,7 +31,7 @@ forget_password:
             Un e-mail a été envoyé. Il contient un lien sur lequel il vous faudra cliquer pour réinitialiser votre mot de passe.
             Si vous ne recevez pas d'email, vérifiez votre dossier spam ou essayez à nouveau.
     email:
-        subject: 'Réinitialisation de votre mot de passe'
+        subject: '🔔 Réinitialisation de votre mot de passe'
         message: |
             Bonjour %user%,
             
@@ -67,7 +67,7 @@ registration:
     btn:
         submit: Inscription
     email:
-        subject: Bienvenue %user%
+        subject: '🔔 Bienvenue %user%'
         message: |
             Bonjour %user%,
 
