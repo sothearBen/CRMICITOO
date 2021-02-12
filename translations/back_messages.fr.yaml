@@ -1,37 +1,34 @@
-invitation:
-    email:
-        subject: '🔔 Invitation'
-        message: |
-            Bonjour %user%,
-            
-            Vous avez été invité à nous rejoindre.
-            
-            Identifiant : %email%
-            Mot de passe : %password%
-
-            Pour valider l'invitation, merci de cliquer sur le lien suivant.
-
-            Ce lien ne peut être utilisé qu'une seule fois pour valider votre compte.
-        action: Valider
-nav:
-    home: Accueil Front
-    end_switch: Fin de l'exploration
-    account: Compte
-    account_login: Connexion
-    account_logout: Déconnection
-    account_profile: Mes informations
-    account_reset_password: Modifier le mot de passe
-sidebar:
-    home: Accueil Back
-    user: Utilisateur
-    user_search: Liste
-    user_create: Inviter
-    contact_message: Formulaire de contact
-    config: Config
 action:
     delete: Supprimer
+    permute_enabled: 'Activer / Désactiver'
     update: Modifier
-    permute_enabled: Activer / Désactiver
+article_category:
+    create:
+        flash:
+            success: 'Catégorie créée (%identifier%).'
+        h1: 'Créer - Catégorie'
+        h2: 'Formulaire de création'
+        title: 'Créer - Catégorie'
+    delete:
+        flash:
+            success: 'Catégorie(s) supprimée(s).'
+        h1: 'Supprimer - Catégorie'
+        h2: 'La liste suivante sera supprimée'
+        modal_title: 'Supprimer - Catégorie'
+    field:
+        name: Nom
+    label:
+        name: Nom
+    search:
+        h1: 'Rechercher - Catégorie'
+        h2: Rechercher
+        title: 'Rechercher - Catégorie'
+    update:
+        flash:
+            success: 'Catégorie modifiée.'
+        h1: 'Modifier - Catégorie'
+        h2: 'Formulaire de modification'
+        title: 'Modifier - Catégorie'
 button:
     back: Retour
     cancel: Annuler
@@ -48,65 +45,6 @@ button:
     switch: Explorer
     update_title: Modifier
     validate: Valider
-delete:
-    confirm: 'Confirmation de la suppression'
-    warning: 'La suppression sera définitive.'
-error:
-    no_element_selected: 'Aucun élément sélectionné'
-label:
-    filter_number_by_page: 'Nombre d''élément par page'
-    filter_search: Rechercher
-'no': Non
-search:
-    action_th: Action(s)
-    no_data_found: 'Aucune donnée n''a été trouvée'
-user:
-    button:
-        create: Inviter
-    create:
-        flash:
-            success: 'L''utilisateur (%identifier%) a été invité.'
-        h1: 'Invitation'
-        h2: 'Inviter un utilisateur'
-        title: 'Invitation'
-    delete:
-        flash:
-            success: 'Utilisateur(s) supprimé.'
-        h1: 'Supprimer - Utilisateur'
-        h2: 'La liste suivante sera supprimée'
-        modal_title: 'Supprimer - Utilisateur'
-    error:
-        cannot_delete_super_admin: Un super administrateur ne peut pas être supprimé.
-        cannot_permute_enabled_super_admin: Un super administrateur ne peut pas être activé ou désactivé.
-    field:
-        created_at: 'Créé'
-        email: Email
-        enabled: Activé
-        firstname: Prénom
-        last_login_at: 'Dernière connexion'
-        lastname: Nom
-        roles: Rôle(s)
-        updated_at: 'Modifié'
-    label:
-        email: Email
-        firstname: Prénom
-        lastname: Nom
-        roles: Rôles
-    read:
-        h1: 'Détails - Utilisateur'
-        h2: Détails
-        title: 'Détails - Utilisateur'
-    search:
-        h1: 'Rechercher - Utilisateur'
-        h2: Rechercher
-        title: 'Rechercher - Utilisateur'
-    update:
-        flash:
-            success: 'Utilisateur modifié.'
-        h1: 'Modifier - Utilisateur'
-        h2: 'Formulaire de modification'
-        title: 'Modifier - Utilisateur'
-'yes': Oui
 config:
     create:
         flash:
@@ -143,6 +81,12 @@ config:
         h2: 'Formulaire de modification'
         title: 'Modifier - Config'
 contact_message:
+    create:
+        flash:
+            success: 'Contact message créé (%identifier%).'
+        h1: 'Créer - Contact message'
+        h2: 'Formulaire de création'
+        title: 'Créer - Contact message'
     delete:
         flash:
             success: 'Contact message(s) supprimé.'
@@ -150,12 +94,12 @@ contact_message:
         h2: 'La liste suivante sera supprimée'
         modal_title: 'Supprimer - Contact message'
     field:
-        created_at: 'Date'
+        created_at: Date
         email: Email
-        phone: Téléphone
         firstname: Prénom
         lastname: Nom
         message: Message
+        phone: Téléphone
         subject: Objet
     read:
         h1: 'Détails - Contact message'
@@ -165,3 +109,92 @@ contact_message:
         h1: 'Rechercher - Contact message'
         h2: Rechercher
         title: 'Rechercher - Contact message'
+delete:
+    confirm: 'Confirmation de la suppression'
+    warning: 'La suppression sera définitive.'
+error:
+    no_element_selected: 'Aucun élément sélectionné'
+invitation:
+    account: Account
+    account_login: Login
+    account_logout: Logout
+    account_profile: 'My profile'
+    account_reset_password: 'Reset password'
+    email:
+        action: Valider
+        message: "Bonjour %user%,\n\nVous avez été invité à nous rejoindre.\n\nIdentifiant : %email%\nMot de passe : %password%\n\nPour valider l'invitation, merci de cliquer sur le lien suivant.\n\nCe lien ne peut être utilisé qu'une seule fois pour valider votre compte.\n"
+        subject: '🔔 Invitation'
+    end_switch: 'End switch'
+    home: 'Home Front'
+label:
+    filter_number_by_page: 'Nombre d''élément par page'
+    filter_search: Rechercher
+nav:
+    account: Compte
+    account_login: Connexion
+    account_logout: Déconnection
+    account_profile: 'Mes informations'
+    account_reset_password: 'Modifier le mot de passe'
+    end_switch: 'Fin de l''exploration'
+    home: 'Accueil Front'
+'no': Non
+search:
+    action_th: Action(s)
+    no_data_found: 'Aucune donnée n''a été trouvée'
+sidebar:
+    config: Config
+    contact_message: 'Formulaire de contact'
+    home: 'Accueil Back'
+    user: Utilisateur
+    user_create: Inviter
+    user_search: Liste
+    article: Article
+    article_category_create: Ajout catégorie
+    article_category_search: Liste des catégories
+user:
+    button:
+        create: Inviter
+    create:
+        flash:
+            success: 'L''utilisateur (%identifier%) a été invité.'
+        h1: Invitation
+        h2: 'Inviter un utilisateur'
+        title: Invitation
+    delete:
+        flash:
+            success: 'Utilisateur(s) supprimé.'
+        h1: 'Supprimer - Utilisateur'
+        h2: 'La liste suivante sera supprimée'
+        modal_title: 'Supprimer - Utilisateur'
+    error:
+        cannot_delete_super_admin: 'Un super administrateur ne peut pas être supprimé.'
+        cannot_permute_enabled_super_admin: 'Un super administrateur ne peut pas être activé ou désactivé.'
+    field:
+        created_at: Créé
+        email: Email
+        enabled: Activé
+        firstname: Prénom
+        last_login_at: 'Dernière connexion'
+        lastname: Nom
+        roles: Rôle(s)
+        updated_at: Modifié
+    label:
+        email: Email
+        firstname: Prénom
+        lastname: Nom
+        roles: Rôles
+    read:
+        h1: 'Détails - Utilisateur'
+        h2: Détails
+        title: 'Détails - Utilisateur'
+    search:
+        h1: 'Rechercher - Utilisateur'
+        h2: Rechercher
+        title: 'Rechercher - Utilisateur'
+    update:
+        flash:
+            success: 'Utilisateur modifié.'
+        h1: 'Modifier - Utilisateur'
+        h2: 'Formulaire de modification'
+        title: 'Modifier - Utilisateur'
+'yes': Oui

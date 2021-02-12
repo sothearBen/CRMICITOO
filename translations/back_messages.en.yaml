@@ -1,36 +1,35 @@
-invitation:
-    email:
-        subject: '🔔 Invitation'
-        message: |
-            Hello %user%,
-
-            You have been invited to join us. 
-
-            Email : %email%
-            Password : %password%
-            
-            To finish activating your account - please click on the following link.
-
-            This link can only be used once to validate your account.
-        action: Validate
-    home: Home Front
-    end_switch: End switch
-    account: Account
-    account_login: Login
-    account_logout: Logout
-    account_profile: My profile
-    account_reset_password: Reset password
-sidebar:
-    home: Home Back
-    user: Utilisateur
-    user_search: List
-    user_create: Invite
-    contact_message: Contact form
-    config: Config
 action:
     delete: Delete
+    permute_enabled: 'Enable / Disable'
     update: Update
-    permute_enabled: Enable / Disable
+article_category:
+    create:
+        flash:
+            success: 'Article category created (%identifier%).'
+        h1: 'Create - Article category'
+        h2: 'Create form'
+        title: 'Create - Article category'
+    delete:
+        flash:
+            success: 'Article category(s) deleted.'
+        h1: 'Delete - Article category'
+        h2: 'The following list will be deleted'
+        modal_title: 'Delete - Article category'
+    field:
+        slug: Slug
+    label:
+        name: Name
+        slug: Slug
+    search:
+        h1: 'Search - Article category'
+        h2: Search
+        title: 'Search - Article category'
+    update:
+        flash:
+            success: 'Article category updated.'
+        h1: 'Update - Article category'
+        h2: 'Update form'
+        title: 'Update - Article category'
 button:
     back: Back
     cancel: Cancel
@@ -47,65 +46,6 @@ button:
     switch: Switch
     update_title: Update
     validate: Validate
-delete:
-    confirm: 'Confirmation of deletion'
-    warning: 'The deletion will be final.'
-error:
-    no_element_selected: 'No element selected'
-label:
-    filter_number_by_page: 'Number by page'
-    filter_search: Search
-'no': 'No'
-search:
-    action_th: Action(s)
-    no_data_found: 'No data found'
-user:
-    button:
-        create: Invite
-    create:
-        flash:
-            success: 'User (%identifier%) has been invite.'
-        h1: 'Invite - User'
-        h2: 'Invitation to user'
-        title: 'Invite - User'
-    delete:
-        flash:
-            success: 'User(s) deleted.'
-        h1: 'Delete - User'
-        h2: 'The following list will be deleted'
-        modal_title: 'Delete - User'
-    error:
-        cannot_delete_super_admin: A super admin cannot be deleted. 
-        cannot_permute_enabled_super_admin: A super admin cannot be enabled or disabled.
-    field:
-        created_at: 'Created At'
-        email: Email
-        enabled: Enabled
-        firstname: Firstname
-        last_login_at: 'Last Login At'
-        lastname: Lastname
-        roles: Roles
-        updated_at: 'Updated At'
-    label:
-        email: Email
-        firstname: Firstname
-        lastname: Lastname
-        roles: Roles
-    read:
-        h1: 'Details - User'
-        h2: Details
-        title: 'Details - User'
-    search:
-        h1: 'Search - User'
-        h2: Search
-        title: 'Search - User'
-    update:
-        flash:
-            success: 'User updated.'
-        h1: 'Update - User'
-        h2: 'Update form'
-        title: 'Update - User'
-'yes': 'Yes'
 config:
     create:
         flash:
@@ -169,3 +109,87 @@ contact_message:
         h1: 'Search - Contact message'
         h2: Search
         title: 'Search - Contact message'
+delete:
+    confirm: 'Confirmation of deletion'
+    warning: 'The deletion will be final.'
+error:
+    no_element_selected: 'No element selected'
+invitation:
+    account: Account
+    account_login: Login
+    account_logout: Logout
+    account_profile: 'My profile'
+    account_reset_password: 'Reset password'
+    email:
+        action: Validate
+        message: "Hello %user%,\n\nYou have been invited to join us. \n\nEmail : %email%\nPassword : %password%\n\nTo finish activating your account - please click on the following link.\n\nThis link can only be used once to validate your account.\n"
+        subject: '🔔 Invitation'
+    end_switch: 'End switch'
+    home: 'Home Front'
+label:
+    filter_number_by_page: 'Number by page'
+    filter_search: Search
+'no': 'No'
+search:
+    action_th: Action(s)
+    no_data_found: 'No data found'
+sidebar:
+    config: Config
+    contact_message: 'Contact form'
+    home: 'Home Back'
+    user: Utilisateur
+    user_create: Invite
+    user_search: List
+    user: User
+    user_create: Invite
+    user_search: List
+    article: Article
+    article_category_create: Add category
+    article_category_search: List categories
+user:
+    button:
+        create: Invite
+    create:
+        flash:
+            success: 'User (%identifier%) has been invite.'
+        h1: 'Invite - User'
+        h2: 'Invitation to user'
+        title: 'Invite - User'
+    delete:
+        flash:
+            success: 'User(s) deleted.'
+        h1: 'Delete - User'
+        h2: 'The following list will be deleted'
+        modal_title: 'Delete - User'
+    error:
+        cannot_delete_super_admin: 'A super admin cannot be deleted.'
+        cannot_permute_enabled_super_admin: 'A super admin cannot be enabled or disabled.'
+    field:
+        created_at: 'Created At'
+        email: Email
+        enabled: Enabled
+        firstname: Firstname
+        last_login_at: 'Last Login At'
+        lastname: Lastname
+        roles: Roles
+        updated_at: 'Updated At'
+    label:
+        email: Email
+        firstname: Firstname
+        lastname: Lastname
+        roles: Roles
+    read:
+        h1: 'Details - User'
+        h2: Details
+        title: 'Details - User'
+    search:
+        h1: 'Search - User'
+        h2: Search
+        title: 'Search - User'
+    update:
+        flash:
+            success: 'User updated.'
+        h1: 'Update - User'
+        h2: 'Update form'
+        title: 'Update - User'
+'yes': 'Yes'

@@ -61,6 +61,20 @@
                 
             </ul>
         </li>
+        <li class="{{ route in ['back_user_search', 'back_user_create'] ? 'active' }}">
+            <a href="#article_sub_menu" data-toggle="collapse" aria-expanded="false" class="dropdown-toggle">{{ 'sidebar.article'|trans() }}</a>
+            <ul class="collapse list-unstyled" id="article_sub_menu">
+                
+                <li>
+                    <a href="{{ path('back_article_category_search') }}">{{ 'sidebar.article_category_search'|trans() }}</a>
+                </li>
+                
+                <li>
+                    <a href="{{ path('back_article_category_create') }}">{{ 'sidebar.article_category_create'|trans() }}</a>
+                </li>
+                
+            </ul>
+        </li>
         <li class="{{ route == 'back_contact_message_search' ? 'active' }}">
             <a href="{{ path('back_contact_message_search') }}">{{ 'sidebar.contact_message'|trans() }}</a>
         </li>
