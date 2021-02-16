@@ -1608,6 +1608,14 @@
   dependencies:
     acorn "^8.0.5"
 
+"@symfony/ux-cropperjs@file:vendor/symfony/ux-cropperjs/Resources/assets":
+  version "1.1.0"
+  dependencies:
+    cropperjs "^1.5.9"
+
+"@symfony/ux-dropzone@file:vendor/symfony/ux-dropzone/Resources/assets":
+  version "1.1.0"
+
 "@symfony/webpack-encore@^1.0.0":
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@symfony/webpack-encore/-/webpack-encore-1.0.5.tgz#e6cfb196722cf3722e294923ff9b64f0515e62bb"
@@ -2675,6 +2683,11 @@ cosmiconfig@^5.0.0:
     is-directory "^0.3.1"
     js-yaml "^3.13.1"
     parse-json "^4.0.0"
+
+cropperjs@^1.5.9:
+  version "1.5.10"
+  resolved "https://registry.yarnpkg.com/cropperjs/-/cropperjs-1.5.10.tgz#ac0c240feb2a3b397ef52b57c03375cd17041a8e"
+  integrity sha512-Zlggv+unsBXVc7EQip6rnOqFnFpHOIc4f8HqzAj3RQNEUNjrCCJyE7OlT/V8S0lO2m4ytRoceTlgzEh1DNMU0Q==
 
 cross-spawn@^7.0.3:
   version "7.0.3"

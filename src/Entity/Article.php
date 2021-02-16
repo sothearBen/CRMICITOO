@@ -62,9 +62,19 @@ class Article
     private $author;
 
     /**
-     * @ORM\ManyToMany(targetEntity=ArticleCategory::class, inversedBy="articles")
+     * @ORM\ManyToMany(targetEntity=ArticleCategory::class, inversedBy="articles", cascade={"persist", "remove"})
      */
     private $categories;
+
+    /**
+     * @ORM\Column(type="string", length=256, nullable=true)
+     */
+    private $croppedImageName;
+
+    /**
+     * @ORM\Column(type="string", length=256, nullable=true)
+     */
+    private $croppedImageThumbnailName;
 
     public function __construct()
     {
@@ -204,6 +214,44 @@ class Article
     public function removeCategory(ArticleCategory $category): self
     {
         $this->categories->removeElement($category);
+
+        return $this;
+    }
+
+    public function getCroppedImageName(): ?string
+    {
+        return $this->croppedImageName;
+    }
+
+    public function getCroppedImageAlt(): ?string
+    {
+        $alt = substr($this->croppedImageName, strpos($this->croppedImageName, '___') + 3);
+
+        return substr($alt, 0, strpos($alt, '.'));
+    }
+
+    public function setCroppedImageName(?string $croppedImageName): self
+    {
+        $this->croppedImageName = $croppedImageName;
+
+        return $this;
+    }
+
+    public function getCroppedImageThumbnailName(): ?string
+    {
+        return $this->croppedImageThumbnailName;
+    }
+
+    public function getCroppedImageThumbnailAlt(): ?string
+    {
+        $alt = substr($this->croppedImageThumbnailName, strpos($this->croppedImageThumbnailName, '___') + 3);
+
+        return substr($alt, 0, strpos($alt, '.'));
+    }
+
+    public function setCroppedImageThumbnailName(?string $croppedImageThumbnailName): self
+    {
+        $this->croppedImageThumbnailName = $croppedImageThumbnailName;
 
         return $this;
     }

@@ -31,13 +31,25 @@ class ArticleCategory
     private $slug;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Article::class, mappedBy="categories")
+     * @ORM\ManyToMany(targetEntity=Article::class, mappedBy="categories", cascade={"persist", "remove"})
      */
     private $articles;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $displayedMenu;
+
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $displayedHome;
 
     public function __construct()
     {
         $this->articles = new ArrayCollection();
+        $this->displayedHome = false;
+        $this->displayedMenu = false;
     }
 
     public function __toString()
@@ -104,6 +116,30 @@ class ArticleCategory
         if ($this->articles->removeElement($article)) {
             $article->removeCategory($this);
         }
+
+        return $this;
+    }
+
+    public function getDisplayedMenu(): ?bool
+    {
+        return $this->displayedMenu;
+    }
+
+    public function setDisplayedMenu(bool $displayedMenu): self
+    {
+        $this->displayedMenu = $displayedMenu;
+
+        return $this;
+    }
+
+    public function getDisplayedHome(): ?bool
+    {
+        return $this->displayedHome;
+    }
+
+    public function setDisplayedHome(bool $displayedHome): self
+    {
+        $this->displayedHome = $displayedHome;
 
         return $this;
     }

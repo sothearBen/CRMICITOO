@@ -2,8 +2,52 @@ action:
     delete: Supprimer
     permute_enabled: 'Activer / Désactiver'
     update: Modifier
+article:
+    button:
+        update_image: Modifier l'image
+        crop_image: Recadrée l'image
+    create:
+        categories_selected: Catégories sélectionnées
+        flash:
+            success: 'Article créé (%identifier%).'
+        h1: 'Créer - Article'
+        h2: 'Formulaire de création'
+        title: 'Créer - Article'
+    delete:
+        flash:
+            success: 'Article(s) supprimé.'
+        h1: 'Supprimer - Article'
+        h2: 'La liste suivante sera supprimée'
+        modal_title: 'Supprimer - Article'
+    field:
+        author: Auteur
+        content: Content
+        created_at: 'Créé le'
+        description: Description
+        title: Titre
+        updated_at: 'Modifié le'
+    label:
+        content: Contenu
+        description: Description
+        title: Titre
+        categories: Catégories
+    read:
+        h1: 'Détails - Article'
+        h2: Détails
+        title: 'Détails - Article'
+    search:
+        h1: 'Rechercher - Article'
+        h2: Rechercher
+        title: 'Rechercher - Article'
+    update:
+        flash:
+            success: 'Article modifié.'
+        h1: 'Modifier - Article'
+        h2: 'Formulaire de modification'
+        title: 'Modifier - Article'
 article_category:
     create:
+        articles_selected: Articles sélectionnées
         flash:
             success: 'Catégorie créée (%identifier%).'
         h1: 'Créer - Catégorie'
@@ -16,9 +60,16 @@ article_category:
         h2: 'La liste suivante sera supprimée'
         modal_title: 'Supprimer - Catégorie'
     field:
+        displayed_home: Afficher dans la page d'accueil
+        displayed_menu: Afficher dans le menu
         name: Nom
+        slug: Slug
     label:
+        displayed_home: Afficher dans la page d'accueil
+        displayed_menu: Afficher dans le menu
         name: Nom
+        slug: Slug
+        articles: Articles
     search:
         h1: 'Rechercher - Catégorie'
         h2: Rechercher
@@ -142,15 +193,17 @@ search:
     action_th: Action(s)
     no_data_found: 'Aucune donnée n''a été trouvée'
 sidebar:
+    article: Article
+    article_create: 'Ajout'
+    article_search: 'Liste'
+    article_category_create: 'Ajout catégorie'
+    article_category_search: 'Liste des catégories'
     config: Config
     contact_message: 'Formulaire de contact'
     home: 'Accueil Back'
     user: Utilisateur
     user_create: Inviter
     user_search: Liste
-    article: Article
-    article_category_create: Ajout catégorie
-    article_category_search: Liste des catégories
 user:
     button:
         create: Inviter
@@ -198,3 +251,16 @@ user:
         h2: 'Formulaire de modification'
         title: 'Modifier - Utilisateur'
 'yes': Oui
+article_image:
+    crop:
+        flash:
+            success: 'Félicitations, votre image a été correctement recadrée.'
+        h1: Ajuster l'image
+        h2: Recadrez l'image afin qu''elle soit correctement affichée
+        title: Ajustez l'image
+    update:
+        flash:
+            success: Félicitations, vous avez bien ajouté l'image. Il ne vous reste plus qu'à la recadrer afin qu'elle s'affiche correctement.
+        title: Ajoutez une image
+        h1: Ajoutez une image à l'article
+        h2: Cette image sera affichée au dessus de l'article

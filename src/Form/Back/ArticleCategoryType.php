@@ -2,8 +2,12 @@
 
 namespace App\Form\Back;
 
+use App\Entity\Article;
 use App\Entity\ArticleCategory;
+use App\Repository\ArticleRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -15,6 +19,25 @@ class ArticleCategoryType extends AbstractType
         $builder
             ->add('name', TextType::class, [
                 'label' => 'article_category.label.name',
+            ])
+            ->add('displayedHome', CheckboxType::class, [
+                'label' => 'article_category.label.displayed_home',
+            ])
+            ->add('displayedMenu', CheckboxType::class, [
+                'label' => 'article_category.label.displayed_menu',
+            ])
+            ->add('articles', EntityType::class, [
+                'label' => 'article_category.label.articles',
+                'label_html' => true,
+                'class' => Article::class,
+                'query_builder' => function (ArticleRepository $er) {
+                    return $er->createQueryBuilder('a')
+
+                            ->orderBy('a.title', 'ASC');
+                },
+                'multiple' => true,
+                'expanded' => true,
+                'required' => false,
             ])
         ;
     }

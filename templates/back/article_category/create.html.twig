@@ -25,6 +25,22 @@
                     <div class="p-4 border border-light">
                         {{ form_start(form) }}
                             {{ form_row(form.name) }}
+                            {{ form_row(form.displayedHome) }}
+                            {{ form_row(form.displayedMenu) }}
+                            <div id="articles_dropdown" class="dropdown">
+                                <button class="btn bg-white text-primary dropdown-toggle btn-block button" type="button" id="articles_dropdown_menu_button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {{ form_label(form.articles) }}
+                                </button>
+                                <p>{{ 'article_category.create.articles_selected'|trans }} : <span id="number_of_article_selected"></span></p>
+                                <div id="articles_selected"></div>
+                                <div id="articles_list" class="dropdown-menu pr-2 pl-2" aria-labelledby="articles_dropdown_menu_button">
+                                    <input class="form-control" type="text" placeholder="{{ 'label.filter_search'|trans }}" id="articles_filter" />
+                                    <div class="form-check pl-0"><input type="checkbox" id="select_all"/></div>
+                                    {% for child in form.articles %}
+                                        <p id="{{ 'item_' ~ child.vars.id }}" class="dropdown-item">{{ form_row(child) }}</p>
+                                    {% endfor %}
+                                </div>
+                            </div>
                             <button class="btn btn-primary btn-block">
                                 <i class="far fa-paper-plane"></i> {{ 'button.submit'|trans() }}
                             </button>
@@ -34,4 +50,9 @@
             </div>
         </div>
     </section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ include('back/article_category/_script_articles.html.twig') }}    
 {% endblock %}

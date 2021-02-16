@@ -45,6 +45,26 @@
                     </li>
                 </ul>
             </li>
+            {% for category in menu_categories %}                
+                {% if category.articles|length %}
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="dropdown_category_{{ category.id }}"
+                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                        >
+                            <span>{{ category.name }}</span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdown_category_{{ category.id }}">
+                            {% for article in category.articles %}
+                                <li class="dropdown-item">
+                                    <a href="{{ path('front_page_article', { 'slug': article.slug }) }}">
+                                        <span>{{ article.title }}</span>
+                                    </a>
+                                </li>
+                            {% endfor %}        
+                        </ul>
+                    </li>
+                {% endif %}
+            {% endfor %}
             {% if app.user %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" id="dropdown_account" 

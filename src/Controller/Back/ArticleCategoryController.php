@@ -108,10 +108,19 @@ class ArticleCategoryController extends AbstractController
      */
     public function update(Request $request, ArticleCategory $articleCategory): Response
     {
+        $oldArticles = clone $articleCategory->getArticles();
         $form = $this->createForm(ArticleCategoryType::class, $articleCategory);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            foreach ($articleCategory->getArticles() as $article) {
+                $article->addCategory($articleCategory);
+            }
+            foreach ($oldArticles as $article) {
+                if (!$articleCategory->getArticles()->contains($article)) {
+                    $article->removeCategory($articleCategory);
+                }
+            }
             $this->getDoctrine()->getManager()->flush();
             $msg = $this->translator->trans('article_category.update.flash.success', [], 'back_messages');
             $this->addFlash('success', $msg);

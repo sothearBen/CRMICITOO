@@ -1,3 +1,10 @@
+article:
+    button:
+        more: Plus
+    field:
+        author: Auteur
+        created_at: Créé le
+        updated_at: Mis à jour le
 nav:
     home: Accueil
     lang: Langue

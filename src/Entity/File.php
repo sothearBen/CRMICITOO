@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FileRepository")
@@ -12,7 +11,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class File implements \Serializable
 {
-    
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()
@@ -34,7 +32,7 @@ class File implements \Serializable
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
-    
+
     /**
      * @ORM\Column(type="datetime")
      */
@@ -54,7 +52,7 @@ class File implements \Serializable
     {
         return $this->getFilename();
     }
-    
+
     /**
      * @ORM\PrePersist
      */
@@ -62,7 +60,7 @@ class File implements \Serializable
     {
         $this->createdAt = new \DateTime();
     }
-    
+
     /**
      * @ORM\PrePersist
      * @ORM\PreUpdate
@@ -72,7 +70,7 @@ class File implements \Serializable
         if (null === $this->file) {
             return;
         }
-        
+
         if (null !== $this->name) {
             $this->filename = $this->getPhpPath();
         }
@@ -128,14 +126,14 @@ class File implements \Serializable
 
     public function getNumber(): string
     {
-        return 'FILE'.str_pad($this->getId(), 8, "0", STR_PAD_LEFT);
+        return '_'.str_pad($this->getId(), 8, '0', STR_PAD_LEFT).'__';
     }
-    
+
     public function getFilename(): ?string
     {
         return $this->getNumber().'_'.$this->getName();
     }
-    
+
     public function getWebDir()
     {
         return '/upload';
@@ -184,7 +182,7 @@ class File implements \Serializable
 
         return $this;
     }
-    
+
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
@@ -214,7 +212,7 @@ class File implements \Serializable
         return $this->file;
     }
 
-    public function setFile(UploadedFile $file=null): self
+    public function setFile(UploadedFile $file = null): self
     {
         $this->file = $file;
 
