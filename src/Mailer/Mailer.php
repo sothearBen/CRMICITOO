@@ -148,7 +148,7 @@ class Mailer
         $this->mailer->send($email);
     }
 
-    public function sendInvitation(User $user, string $password, string $locale)
+    public function sendInvitation(User $user, string $password)
     {
         $url = $this->router->generate(
             'app_registration_confirm',
@@ -170,6 +170,12 @@ class Mailer
             ->context([
                 'user' => $user,
                 'password' => $password,
+                'footer_text' => $this->appConfig['name'],
+                'footer_url' => $this->router->generate(
+                    'front_home',
+                    [],
+                    UrlGeneratorInterface::ABSOLUTE_URL
+                ),
             ])
             ->action($this->translator->trans('invitation.email.action', [], 'back_messages'), $url);
         $this->mailer->send($email);

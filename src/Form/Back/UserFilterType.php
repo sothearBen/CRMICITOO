@@ -2,7 +2,7 @@
 
 namespace App\Form\Back;
 
-use App\Manager\UserManager;
+use App\Manager\Back\UserManager;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;

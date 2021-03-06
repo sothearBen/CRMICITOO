@@ -42,12 +42,16 @@
         "twig/markdown-extra": "^3.3"
     },
     "require-dev": {
+        "dbrekelmans/bdi": "^0.3.0",
         "devfusion/maker-bundle": "1.1.x-dev",
         "doctrine/doctrine-fixtures-bundle": "^3.4",
+        "symfony/browser-kit": "^5.2",
+        "symfony/css-selector": "^5.2",
         "symfony/debug-pack": "*",
         "symfony/maker-bundle": "^1.25",
-        "symfony/profiler-pack": "*",
-        "symfony/test-pack": "*"
+        "symfony/panther": "^1.0",
+        "symfony/phpunit-bridge": "^5.2",
+        "symfony/profiler-pack": "*"
     },
     "config": {
         "preferred-install": {

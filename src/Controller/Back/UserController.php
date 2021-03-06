@@ -103,7 +103,7 @@ class UserController extends AbstractController
             );
 
             $user->setEnabled(false);
-            $user->setConfirmationToken(random_bytes(24));
+            $user->setConfirmationToken('register_'.bin2hex(random_bytes(24)));
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);

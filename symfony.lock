@@ -5,6 +5,9 @@
     "async-aws/ses": {
         "version": "1.3.1"
     },
+    "dbrekelmans/bdi": {
+        "version": "0.3"
+    },
     "devfusion/maker-bundle": {
         "version": "1.1-dev"
     },
@@ -167,6 +170,9 @@
     },
     "php": {
         "version": "7.2"
+    },
+    "php-webdriver/webdriver": {
+        "version": "1.10.0"
     },
     "phpdocumentor/reflection-common": {
         "version": "2.0.0"
@@ -408,6 +414,15 @@
     },
     "symfony/orm-pack": {
         "version": "v1.0.7"
+    },
+    "symfony/panther": {
+        "version": "1.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "1.0",
+            "ref": "93d9baa582d0a755cc9ef81bc38a921d5fa16973"
+        }
     },
     "symfony/phpunit-bridge": {
         "version": "4.3",

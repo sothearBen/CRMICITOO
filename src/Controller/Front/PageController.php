@@ -51,7 +51,7 @@ class PageController extends AbstractController
     }
 
     /**
-     * @Route("/{slug}", name="front_page_article", methods="GET")
+     * @Route("/{slug}", priority=-100, name="front_page_article", methods="GET")
      */
     public function article(Article $article)
     {
