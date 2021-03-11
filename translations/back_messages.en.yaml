@@ -31,6 +31,13 @@ article:
         description: Description
         title: Title
         categories: Categories
+    category_order:
+        flash:
+            success: 'Categories ordered.'
+            less_than_two_subcategory: There are less than two categories
+        h1: 'Order - Catégorie'
+        h2: 'Position the categories in the desired order'
+        title: 'Order - Catégory'
     read:
         h1: 'Details - Article'
         h2: Details
@@ -60,10 +67,14 @@ article_category:
         h2: 'The following list will be deleted'
         modal_title: 'Delete - Article category'
     field:
+        articles: Articles
         displayed_home: Displayed in home page
         displayed_menu: Displayed in menu
         slug: Slug
+        parent_category: Parent category
     label:
+        filter_parent_category: Filter
+        parent_category: Parent category
         displayed_home: Displayed in home page
         displayed_menu: Displayed in menu
         name: Name
@@ -73,6 +84,20 @@ article_category:
         h1: 'Search - Article category'
         h2: Search
         title: 'Search - Article category'
+    order:
+        flash:
+            success: 'Categories ordered.'
+            less_than_two_subcategory: There are less than two categories
+        h1: 'Order - Catégorie'
+        h2: 'Position the categories in the desired order'
+        title: 'Order - Catégory'
+    article_order:
+        flash:
+            success: 'Articles ordered.'
+            less_than_two_subcategory: There are less than two articles
+        h1: 'Order - Article'
+        h2: 'Position the articles in the desired order'
+        title: 'Order - Article'
     update:
         flash:
             success: 'Article category updated.'
@@ -95,6 +120,9 @@ button:
     switch: Switch
     update_title: Update
     validate: Validate
+    up: Up
+    down: Down
+    order: Order
 config:
     create:
         flash:

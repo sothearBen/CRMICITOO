@@ -3,8 +3,10 @@
 namespace App\Controller\Back;
 
 use App\Entity\Article;
+use App\Entity\ArticlePositionCategory;
 use App\Form\Back\ArticleBatchType;
 use App\Form\Back\ArticleFilterType;
+use App\Form\Back\ArticlePositionCategoryOrderCollectionType;
 use App\Form\Back\ArticleType;
 use App\Manager\Back\ArticleManager;
 use App\Repository\ArticleRepository;
@@ -88,6 +90,11 @@ class ArticleController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $article->setAuthor($this->getUser());
+            foreach ($form->get('categories')->getData() as $category) {
+                $articlePositionCategory = new ArticlePositionCategory();
+                $category->addPositionArticle($articlePositionCategory);
+                $article->addPositionCategory($articlePositionCategory);
+            }
             $em = $this->getDoctrine()->getManager();
             $em->persist($article);
             $em->flush();
@@ -119,15 +126,29 @@ class ArticleController extends AbstractController
      */
     public function update(Request $request, Article $article): Response
     {
-        $form = $this->createForm(ArticleType::class, $article);
+        $oldCategories = $article->getCategories();
+        $form = $this->createForm(ArticleType::class, $article, ['categories' => $oldCategories]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $categories = $form->get('categories')->getData();
+            foreach ($oldCategories as $category) {
+                if (false === array_search($category, $categories, true)) {
+                    $article->removeCategory($category);
+                }
+            }
+            foreach ($categories as $category) {
+                if (false === array_search($category, $oldCategories, true)) {
+                    $articlePositionCategory = new ArticlePositionCategory();
+                    $category->addPositionArticle($articlePositionCategory);
+                    $article->addPositionCategory($articlePositionCategory);
+                }
+            }
             $this->getDoctrine()->getManager()->flush();
             $msg = $this->translator->trans('article.update.flash.success', [], 'back_messages');
             $this->addFlash('success', $msg);
 
-            return $this->redirectToRoute('back_article_search');
+            return $this->redirectToRoute('back_article_read', ['id' => $article->getId()]);
         }
 
         return $this->render('back/article/update.html.twig', [
@@ -168,6 +189,38 @@ class ArticleController extends AbstractController
 
         return $this->render('back/article/delete.html.twig', [
             'articles' => $articles,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/categories/order/{id}", name="back_article_order_categories", methods="GET|POST")
+     */
+    public function orderCategories(Request $request, Article $article): Response
+    {
+        if ($article->getPositionCategories()->count() < 2) {
+            $msg = $this->translator->trans('article.category_order.flash.less_than_two_subcategory', [], 'back_messages');
+            $this->addFlash('warning', $msg);
+
+            return $this->redirectToRoute('back_article_category_search');
+        }
+        $form = $this->createForm(ArticlePositionCategoryOrderCollectionType::class, null, [
+                'article_position_categories' => $article->getPositionCategories(),
+                'position' => 'positionCategory',
+            ])
+        ;
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+            $msg = $this->translator->trans('article.category_order.flash.success', [], 'back_messages');
+            $this->addFlash('success', $msg);
+
+            return $this->redirectToRoute('back_article_read', ['id' => $article->getId()]);
+        }
+
+        return $this->render('back/article/category_order.html.twig', [
+            'article' => $article,
             'form' => $form->createView(),
         ]);
     }

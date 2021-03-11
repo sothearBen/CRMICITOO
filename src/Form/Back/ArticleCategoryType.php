@@ -4,6 +4,7 @@ namespace App\Form\Back;
 
 use App\Entity\Article;
 use App\Entity\ArticleCategory;
+use App\Repository\ArticleCategoryRepository;
 use App\Repository\ArticleRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -22,9 +23,26 @@ class ArticleCategoryType extends AbstractType
             ])
             ->add('displayedHome', CheckboxType::class, [
                 'label' => 'article_category.label.displayed_home',
+                'required' => false,
             ])
             ->add('displayedMenu', CheckboxType::class, [
                 'label' => 'article_category.label.displayed_menu',
+                'required' => false,
+            ])
+            ->add('filterParentCategory', TextType::class, [
+                'label' => 'article_category.label.filter_parent_category',
+                'mapped' => false,
+                'required' => false,
+            ])
+            ->add('parentCategory', EntityType::class, [
+                'label' => 'article_category.label.parent_category',
+                'class' => ArticleCategory::class,
+                'query_builder' => function (ArticleCategoryRepository $er) {
+                    return $er->createQueryBuilder('a')
+                            ->orderBy('a.name', 'ASC');
+                },
+                'placeholder' => '---',
+                'required' => false,
             ])
             ->add('articles', EntityType::class, [
                 'label' => 'article_category.label.articles',
@@ -32,11 +50,12 @@ class ArticleCategoryType extends AbstractType
                 'class' => Article::class,
                 'query_builder' => function (ArticleRepository $er) {
                     return $er->createQueryBuilder('a')
-
                             ->orderBy('a.title', 'ASC');
                 },
+                'data' => $options['articles'],
                 'multiple' => true,
                 'expanded' => true,
+                'mapped' => false,
                 'required' => false,
             ])
         ;
@@ -47,6 +66,7 @@ class ArticleCategoryType extends AbstractType
         $resolver->setDefaults([
             'data_class' => ArticleCategory::class,
             'translation_domain' => 'back_messages',
+            'articles' => [],
         ]);
     }
 }

@@ -3,9 +3,12 @@
 namespace App\Controller\Back;
 
 use App\Entity\ArticleCategory;
+use App\Entity\ArticlePositionCategory;
 use App\Form\Back\ArticleCategoryBatchType;
 use App\Form\Back\ArticleCategoryFilterType;
+use App\Form\Back\ArticleCategoryOrderCollectionType;
 use App\Form\Back\ArticleCategoryType;
+use App\Form\Back\ArticlePositionCategoryOrderCollectionType;
 use App\Manager\Back\ArticleCategoryManager;
 use App\Repository\ArticleCategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -44,19 +47,46 @@ class ArticleCategoryController extends AbstractController
     }
 
     /**
-     * @Route("/search/{page}", name="back_article_category_search", methods="GET|POST")
+     * @Route("/search", name="back_article_category_search", methods="GET|POST")
      */
-    public function search(Request $request, Session $session, $page = null)
+    public function search(Request $request, Session $session)
     {
-        $page ?: $page = $session->get('back_article_category_page', 1);
-
-        $formFilter = $this->createForm(ArticleCategoryFilterType::class, null, ['action' => $this->generateUrl('back_article_category_search', ['page' => 1])]);
+        $formFilter = $this->createForm(ArticleCategoryFilterType::class, null, ['action' => $this->generateUrl('back_article_category_search', [])]);
         $formFilter->handleRequest($request);
         $data = $this->articleCategoryManager->configFormFilter($formFilter)->getData();
-        $articleCategories = $this->articleCategoryRepository->searchBack($request, $session, $data, $page);
+        $articleCategories = $this->articleCategoryRepository->searchBack($request, $session, $data);
+        shuffle($articleCategories);
+        usort($articleCategories, function (ArticleCategory $a, ArticleCategory $b) {
+            $routeA = array_reverse($a->getParentCategories());
+            $routeA[] = $a;
+            $routeB = array_reverse($b->getParentCategories());
+            $routeB[] = $b;
+            $common = null;
+            foreach ($routeA as $key => $node) {
+                if (isset($routeB[$key])) {
+                    $common = $key;
+                    if ($node->getPosition() != $routeB[$key]->getPosition()) {
+                        return $node->getPosition() <=> $routeB[$key]->getPosition();
+                    }
+                } else {
+                    break;
+                }
+            }
+            if (isset($routeB[$common + 1]) && $routeA[$common] === $routeB[$common + 1]->getParentCategory()) {
+                return -1;
+            }
+
+            if (isset($routeA[$common + 1]) && $routeB[$common] === $routeA[$common + 1]->getParentCategory()) {
+                return 1;
+            }
+
+            dd($a->getName().' '.$b->getName());
+
+            return 0;
+        });
         $queryData = $this->articleCategoryManager->getQueryData($data);
         $formBatch = $this->createForm(ArticleCategoryBatchType::class, null, [
-            'action' => $this->generateUrl('back_article_category_search', array_merge(['page' => $page], $queryData)),
+            'action' => $this->generateUrl('back_article_category_search', $queryData),
             'article_categories' => $articleCategories,
         ]);
         $formBatch->handleRequest($request);
@@ -72,8 +102,6 @@ class ArticleCategoryController extends AbstractController
             'form_filter' => $formFilter->createView(),
             'form_batch' => $formBatch->createView(),
             'form_delete' => $this->createFormBuilder()->getForm()->createView(),
-            'number_page' => ceil(count($articleCategories) / $formFilter->get('number_by_page')->getData()) ?: 1,
-            'page' => $page,
             'query_data' => $queryData,
         ]);
     }
@@ -88,6 +116,21 @@ class ArticleCategoryController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $last = false;
+            if ($parent = $articleCategory->getParentCategory()) {
+                $last = $parent->getSubcategories()->last();
+            } else {
+                $roots = $this->articleCategoryRepository->findRoots();
+                $last = end($roots);
+            }
+            if ($last) {
+                $articleCategory->setPosition($last->getPosition() + 1);
+            }
+            foreach ($form->get('articles')->getData() as $article) {
+                $articlePositionCategory = new ArticlePositionCategory();
+                $articleCategory->addPositionArticle($articlePositionCategory);
+                $article->addPositionCategory($articlePositionCategory);
+            }
             $em = $this->getDoctrine()->getManager();
             $em->persist($articleCategory);
             $em->flush();
@@ -108,17 +151,38 @@ class ArticleCategoryController extends AbstractController
      */
     public function update(Request $request, ArticleCategory $articleCategory): Response
     {
-        $oldArticles = clone $articleCategory->getArticles();
-        $form = $this->createForm(ArticleCategoryType::class, $articleCategory);
+        $oldParent = null;
+        if ($articleCategory->getParentCategory()) {
+            $oldParent = clone $articleCategory->getParentCategory();
+        }
+        $oldArticles = $articleCategory->getArticles();
+        $form = $this->createForm(ArticleCategoryType::class, $articleCategory, ['articles' => $oldArticles]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            foreach ($articleCategory->getArticles() as $article) {
-                $article->addCategory($articleCategory);
+            if ($oldParent !== $articleCategory->getParentCategory()) {
+                $last = false;
+                if ($parent = $articleCategory->getParentCategory()) {
+                    $last = $parent->getSubcategories()->last();
+                } else {
+                    $roots = $this->articleCategoryRepository->findRoots();
+                    $last = end($roots);
+                }
+                if ($last) {
+                    $articleCategory->setPosition($last->getPosition() + 1);
+                }
             }
+            $articles = $form->get('articles')->getData();
             foreach ($oldArticles as $article) {
-                if (!$articleCategory->getArticles()->contains($article)) {
-                    $article->removeCategory($articleCategory);
+                if (false === array_search($article, $articles, true)) {
+                    $articleCategory->removeArticle($article);
+                }
+            }
+            foreach ($articles as $article) {
+                if (false === array_search($article, $oldArticles, true)) {
+                    $articlePositionCategory = new ArticlePositionCategory();
+                    $articleCategory->addPositionArticle($articlePositionCategory);
+                    $article->addPositionCategory($articlePositionCategory);
                 }
             }
             $this->getDoctrine()->getManager()->flush();
@@ -152,6 +216,19 @@ class ArticleCategoryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             foreach ($articleCategories as $articleCategory) {
+                $articleCategory->setParentCategory(null);
+                if ($articleCategory->getSubcategories()->count()) {
+                    $roots = $this->articleCategoryRepository->findRoots();
+                    $last = end($roots);
+                    $positionLast = -1;
+                    if ($last) {
+                        $positionLast = $last->getPosition();
+                    }
+                    foreach ($articleCategory->getSubcategories() as $subcategory) {
+                        $subcategory->setPosition(++$positionLast);
+                        $articleCategory->removeSubcategory($subcategory);
+                    }
+                }
                 $em->remove($articleCategory);
             }
             try {
@@ -166,6 +243,72 @@ class ArticleCategoryController extends AbstractController
 
         return $this->render('back/article_category/delete.html.twig', [
             'article_categories' => $articleCategories,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/order/{id}", defaults={"id"=null}, name="back_article_category_order", methods="GET|POST")
+     */
+    public function order(Request $request, ArticleCategory $articleCategory = null): Response
+    {
+        $categories = [];
+        if ($articleCategory) {
+            $categories = $articleCategory->getSubcategories();
+        } else {
+            $categories = $this->articleCategoryRepository->findRoots();
+        }
+        if (count($categories) < 2) {
+            $msg = $this->translator->trans('article_category.order.flash.less_than_two_subcategory', [], 'back_messages');
+            $this->addFlash('success', $msg);
+
+            return $this->redirectToRoute('back_article_category_search');
+        }
+        $form = $this->createForm(ArticleCategoryOrderCollectionType::class, null, ['categories' => $categories]);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+            $msg = $this->translator->trans('article_category.order.flash.success', [], 'back_messages');
+            $this->addFlash('success', $msg);
+
+            return $this->redirectToRoute('back_article_category_search');
+        }
+
+        return $this->render('back/article_category/order.html.twig', [
+            'article_category' => $articleCategory,
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * @Route("/articles/order/{id}", name="back_article_category_order_articles", methods="GET|POST")
+     */
+    public function orderArticles(Request $request, ArticleCategory $articleCategory): Response
+    {
+        if ($articleCategory->getPositionArticles()->count() < 2) {
+            $msg = $this->translator->trans('article_category.article_order.flash.less_than_two_subcategory', [], 'back_messages');
+            $this->addFlash('warning', $msg);
+
+            return $this->redirectToRoute('back_article_category_search');
+        }
+        $form = $this->createForm(ArticlePositionCategoryOrderCollectionType::class, null, [
+                'article_position_categories' => $articleCategory->getPositionArticles(),
+                'position' => 'positionArticle',
+            ])
+        ;
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->getDoctrine()->getManager()->flush();
+            $msg = $this->translator->trans('article_category.article_order.flash.success', [], 'back_messages');
+            $this->addFlash('success', $msg);
+
+            return $this->redirectToRoute('back_article_category_search');
+        }
+
+        return $this->render('back/article_category/article_order.html.twig', [
+            'article_category' => $articleCategory,
             'form' => $form->createView(),
         ]);
     }

@@ -4,6 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Article;
 use App\Entity\ArticleCategory;
+use App\Entity\ArticlePositionCategory;
 use App\Entity\Config;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -52,32 +53,60 @@ class AppFixtures extends Fixture
 
         $categories = [];
         for ($i = 0; $i < 4; ++$i) {
-            $category = new ArticleCategory();
-            $category
+            $categoryI = new ArticleCategory();
+            $categoryI
                 ->setDisplayedHome(true)
                 ->setDisplayedMenu(true)
-                ->setName($this->faker->text(25));
-            $categories[] = $category;
-            $manager->persist($category);
-        }
-        for ($i = 0; $i < 30; ++$i) {
-            $description = $this->faker->realText(300);
-            $content = '';
-            for ($j = 0; $j < 5; ++$j) {
-                $content .= '<p>';
-                $content .= $this->faker->realText(1024);
-                $content .= '</p>';
+                ->setPosition($i)
+                ->setName(sprintf('Cat-%s', $i));
+            $categories[] = $categoryI;
+            $manager->persist($categoryI);
+            for ($j = 0; $j < 4; ++$j) {
+                $categoryJ = new ArticleCategory();
+                $categoryJ
+                    ->setDisplayedHome(true)
+                    ->setDisplayedMenu(true)
+                    ->setPosition($j)
+                    ->setName(sprintf('Cat-%s-%s', $i, $j))
+                    ->setParentCategory($categoryI);
+                $categories[] = $categoryJ;
+                $manager->persist($categoryJ);
+                for ($k = 0; $k < 4; ++$k) {
+                    $categoryK = new ArticleCategory();
+                    $categoryK
+                        ->setDisplayedHome(true)
+                        ->setDisplayedMenu(true)
+                        ->setPosition($k)
+                        ->setName(sprintf('Cat-%s-%s-%s', $i, $j, $k))
+                        ->setParentCategory($categoryJ);
+                    $categories[] = $categoryK;
+                    $manager->persist($categoryK);
+                }
             }
-            $createdAt = $this->faker->dateTimeThisYear();
-            $article = (new Article())
+        }
+        $manager->flush();
+        foreach ($categories as $key => $category) {
+            for ($i = 0; $i < 4; ++$i) {
+                $description = $this->faker->realText(300);
+                $content = '';
+                for ($j = 0; $j < 5; ++$j) {
+                    $content .= '<p>';
+                    $content .= $this->faker->realText(1024);
+                    $content .= '</p>';
+                }
+                $createdAt = $this->faker->dateTimeThisYear();
+                $article = (new Article())
                 ->setAuthor($user)
-                ->setTitle($this->faker->text(48))
+                ->setTitle("Article $key $i")
                 ->setDescription($description)
                 ->setContent($content)
                 ->setCreatedAt($createdAt)
-                ->setUpdatedAt($createdAt)
-                ->addCategory($categories[rand(0, 3)]);
-            $manager->persist($article);
+                ->setUpdatedAt($createdAt);
+                $articlePositionCategory = new ArticlePositionCategory();
+                $article->addPositionCategory($articlePositionCategory);
+                $category->addPositionArticle($articlePositionCategory);
+                $manager->persist($article);
+            }
         }
 
         $manager->flush();

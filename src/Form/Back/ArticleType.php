@@ -35,9 +35,11 @@ class ArticleType extends AbstractType
 
                             ->orderBy('c.name', 'ASC');
                 },
+                'data' => $options['categories'],
                 'multiple' => true,
                 'expanded' => true,
                 'required' => false,
+                'mapped' => false,
             ])
         ;
     }
@@ -47,6 +49,7 @@ class ArticleType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Article::class,
             'translation_domain' => 'back_messages',
+            'categories' => [],
         ]);
     }
 }

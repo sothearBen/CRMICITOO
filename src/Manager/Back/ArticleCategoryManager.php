@@ -64,15 +64,11 @@ class ArticleCategoryManager
      */
     public function configFormFilter(FormInterface $form)
     {
-        $page = $this->requestStack->getCurrentRequest()->get('page');
-        $page ?: $page = $this->session->get('back_article_category_page', 1);
-        $this->session->set('back_article_category_page', $page);
         if (!$form->getData()) {
             $form->setData($this->getDefaultFormSearchData());
         }
         if ($form->isSubmitted() && $form->isValid()) {
             $this->session->set('back_article_category_search', $form->get('search')->getData());
-            $this->session->set('back_article_category_number_by_page', $form->get('number_by_page')->getData());
         }
 
         return $form;
@@ -89,7 +85,6 @@ class ArticleCategoryManager
     {
         return [
             'search' => $this->session->get('back_article_category_search', null),
-            'number_by_page' => $this->session->get('back_article_category_number_by_page', self::NUMBER_BY_PAGE),
         ];
     }
 

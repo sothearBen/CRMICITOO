@@ -39,6 +39,13 @@ article:
         h1: 'Rechercher - Article'
         h2: Rechercher
         title: 'Rechercher - Article'
+    category_order:
+        flash:
+            success: 'Catégories ordonnées.'
+            less_than_two_subcategory: Il y amoins de deux catégories
+        h1: 'Ordonner - Catégorie'
+        h2: Positionner les catégories dans l'ordre souhaité
+        title: 'Ordonner - Catégorie'
     update:
         flash:
             success: 'Article modifié.'
@@ -60,20 +67,38 @@ article_category:
         h2: 'La liste suivante sera supprimée'
         modal_title: 'Supprimer - Catégorie'
     field:
+        articles: Articles
         displayed_home: Afficher dans la page d'accueil
         displayed_menu: Afficher dans le menu
         name: Nom
         slug: Slug
+        parent_category: Categorie parente
     label:
+        filter_parent_category: Filtre
         displayed_home: Afficher dans la page d'accueil
         displayed_menu: Afficher dans le menu
         name: Nom
         slug: Slug
+        parent_category: Categorie parente
         articles: Articles
     search:
         h1: 'Rechercher - Catégorie'
         h2: Rechercher
         title: 'Rechercher - Catégorie'
+    order:
+        flash:
+            success: 'Catégories ordonnées.'
+            less_than_two_subcategory: Il y amoins de deux catégories
+        h1: 'Ordonner - Catégorie'
+        h2: Positionner les catégories dans l'ordre souhaité
+        title: 'Ordonner - Catégorie'
+    article_order:
+        flash:
+            success: 'Articles ordonnées.'
+            less_than_two_subcategory: Il y amoins de deux articles
+        h1: 'Ordonner - Article'
+        h2: Positionner les articles dans l'ordre souhaité
+        title: 'Ordonner - Article'
     update:
         flash:
             success: 'Catégorie modifiée.'
@@ -96,6 +121,9 @@ button:
     switch: Explorer
     update_title: Modifier
     validate: Valider
+    up: Monter
+    down: Descendre
+    order: Ordonner
 config:
     create:
         flash:

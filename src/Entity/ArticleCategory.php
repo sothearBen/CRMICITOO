@@ -31,11 +31,6 @@ class ArticleCategory
     private $slug;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Article::class, mappedBy="categories", cascade={"persist", "remove"})
-     */
-    private $articles;
-
-    /**
      * @ORM\Column(type="boolean")
      */
     private $displayedMenu;
@@ -45,16 +40,80 @@ class ArticleCategory
      */
     private $displayedHome;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $position;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=ArticleCategory::class, inversedBy="subcategories", cascade={"persist"})
+     */
+    private $parentCategory;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ArticleCategory::class, mappedBy="parentCategory", cascade={"persist"})
+     * @ORM\OrderBy({"position" = "ASC"})
+     */
+    private $subcategories;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ArticlePositionCategory::class, mappedBy="category", orphanRemoval=true, cascade={"persist", "remove"})
+     * @ORM\OrderBy({"positionArticle" = "ASC"})
+     */
+    private $positionArticles;
+
     public function __construct()
     {
-        $this->articles = new ArrayCollection();
+        $this->position = 0;
         $this->displayedHome = false;
         $this->displayedMenu = false;
+        $this->subcategories = new ArrayCollection();
+        $this->positionArticles = new ArrayCollection();
     }
 
     public function __toString()
     {
         return $this->name;
+    }
+
+    public function getParentCategories(array $parents = [])
+    {
+        if ($this->getParentCategory()) {
+            $parents[] = $this->getParentCategory();
+
+            return $this->getParentCategory()->getParentCategories($parents);
+        }
+
+        return $parents;
+    }
+
+    public function getDeep()
+    {
+        return count($this->getParentCategories());
+    }
+
+    public function getArticles()
+    {
+        $articles = [];
+        foreach ($this->getPositionArticles() as $positionArticle) {
+            $articles[] = $positionArticle->getArticle();
+        }
+
+        return $articles;
+    }
+
+    public function removeArticle($article)
+    {
+        foreach ($this->getPositionArticles() as $positionArticle) {
+            if ($article === $positionArticle->getArticle()) {
+                $this->removePositionArticle($positionArticle);
+                $positionArticle->getArticle()->removePositionCategory($positionArticle);
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function computeSlug(SluggerInterface $slugger)
@@ -93,33 +152,6 @@ class ArticleCategory
         return $this;
     }
 
-    /**
-     * @return Collection|Article[]
-     */
-    public function getArticles(): Collection
-    {
-        return $this->articles;
-    }
-
-    public function addArticle(Article $article): self
-    {
-        if (!$this->articles->contains($article)) {
-            $this->articles[] = $article;
-            $article->addCategory($this);
-        }
-
-        return $this;
-    }
-
-    public function removeArticle(Article $article): self
-    {
-        if ($this->articles->removeElement($article)) {
-            $article->removeCategory($this);
-        }
-
-        return $this;
-    }
-
     public function getDisplayedMenu(): ?bool
     {
         return $this->displayedMenu;
@@ -140,6 +172,90 @@ class ArticleCategory
     public function setDisplayedHome(bool $displayedHome): self
     {
         $this->displayedHome = $displayedHome;
+
+        return $this;
+    }
+
+    public function getPosition(): ?int
+    {
+        return $this->position;
+    }
+
+    public function setPosition(int $position): self
+    {
+        $this->position = $position;
+
+        return $this;
+    }
+
+    public function getParentCategory(): ?self
+    {
+        return $this->parentCategory;
+    }
+
+    public function setParentCategory(?self $parentCategory): self
+    {
+        $this->parentCategory = $parentCategory;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|self[]
+     */
+    public function getSubcategories(): Collection
+    {
+        return $this->subcategories;
+    }
+
+    public function addSubcategory(self $subcategory): self
+    {
+        if (!$this->subcategories->contains($subcategory)) {
+            $this->subcategories[] = $subcategory;
+            $subcategory->setParentCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubcategory(self $subcategory): self
+    {
+        if ($this->subcategories->removeElement($subcategory)) {
+            // set the owning side to null (unless already changed)
+            if ($subcategory->getParentCategory() === $this) {
+                $subcategory->setParentCategory(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ArticlePositionCategory[]
+     */
+    public function getPositionArticles(): Collection
+    {
+        return $this->positionArticles;
+    }
+
+    public function addPositionArticle(ArticlePositionCategory $positionArticle): self
+    {
+        if (!$this->positionArticles->contains($positionArticle)) {
+            $this->positionArticles[] = $positionArticle;
+            $positionArticle->setCategory($this);
+        }
+
+        return $this;
+    }
+
+    public function removePositionArticle(ArticlePositionCategory $positionArticle): self
+    {
+        if ($this->positionArticles->removeElement($positionArticle)) {
+            // set the owning side to null (unless already changed)
+            if ($positionArticle->getCategory() === $this) {
+                $positionArticle->setCategory(null);
+            }
+        }
 
         return $this;
     }

@@ -2,22 +2,21 @@
 
 namespace App\Form\Back;
 
+use App\Entity\ArticlePositionCategory;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class ArticleCategoryFilterType extends AbstractType
+class ArticlePositionCategoryOrderType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('search', TextType::class, [
-                'label' => false,
+            ->add($options['position'], HiddenType::class, [
                 'attr' => [
-                    'placeholder' => 'label.filter_search',
+                    'class' => 'position',
                 ],
-                'required' => false,
             ])
         ;
     }
@@ -25,14 +24,9 @@ class ArticleCategoryFilterType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'csrf_protection' => false,
-            'method' => 'GET',
+            'data_class' => ArticlePositionCategory::class,
             'translation_domain' => 'back_messages',
+            'position' => null,
         ]);
-    }
-
-    public function getBlockPrefix()
-    {
-        return 'filter';
     }
 }

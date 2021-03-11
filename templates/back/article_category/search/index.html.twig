@@ -49,6 +49,9 @@
                                 <i class="fas fa-plus"></i> {{ 'button.create'|trans() }}
                             </a>
                         {% endif %}
+                        <a href="{{ path('back_article_category_order') }}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> {{ 'button.order'|trans() }}
+                        </a>
                     </p>
                 </div>
             </div>
@@ -59,9 +62,6 @@
             {% endif %}
 
             {{ include('back/article_category/search/_list.html.twig') }}
-
-            {{ include('back/article_category/search/_pagination.html.twig') }}
-
         </div>
     </section>
 {% endblock %}

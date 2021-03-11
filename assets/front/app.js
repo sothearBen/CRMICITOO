@@ -10,3 +10,5 @@ const $ = require('jquery');
 window.Popper = require('popper.js');
 global.$ = global.jQuery = $;
 require('bootstrap');
+
+require('./navbar');

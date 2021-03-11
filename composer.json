@@ -8,6 +8,7 @@
         "async-aws/ses": "^1.3",
         "friendsofsymfony/ckeditor-bundle": "^2.3",
         "fzaninotto/faker": "^1.9",
+        "helios-ag/fm-elfinder-bundle": "^10.1",
         "sensio/framework-extra-bundle": "^5.2",
         "symfony/amazon-mailer": "^5.2",
         "symfony/asset": "5.2.*",
@@ -80,7 +81,8 @@
     "scripts": {
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+            "assets:install %PUBLIC_DIR%": "symfony-cmd",
+            "elfinder:install": "symfony-cmd"
         },
         "post-install-cmd": [
             "@auto-scripts"

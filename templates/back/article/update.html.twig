@@ -33,12 +33,14 @@
                                 </button>
                                 <p>{{ 'article.create.categories_selected'|trans }} : <span id="number_of_category_selected"></span></p>
                                 <div id="categories_selected"></div>
-                                <div id="categories_list" class="dropdown-menu pr-2 pl-2" aria-labelledby="categories_dropdown_menu_button">
+                                <div class="dropdown-menu pr-2 pl-2" aria-labelledby="categories_dropdown_menu_button">
                                     <input class="form-control" type="text" placeholder="{{ 'label.filter_search'|trans }}" id="categories_filter" />
                                     <div class="form-check pl-0"><input type="checkbox" id="select_all"/></div>
-                                    {% for child in form.categories %}
-                                        <p id="{{ 'item_' ~ child.vars.id }}" class="dropdown-item">{{ form_row(child) }}</p>
-                                    {% endfor %}
+                                    <div id="category_list">
+                                        {% for child in form.categories %}
+                                            <p id="{{ 'item_' ~ child.vars.id }}" class="dropdown-item">{{ form_row(child) }}</p>
+                                        {% endfor %}
+                                    </div>
                                 </div>
                             </div>
                             <button class="btn btn-primary btn-block">

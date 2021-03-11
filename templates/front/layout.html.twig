@@ -8,22 +8,21 @@
         {% block flash_message %}
             {% include "block/_flash_message.html.twig" %}
         {% endblock %}
-        
-        {% block navbar %}
-            <div class="menu">
-                <div class="container">
+        <div id="wrapper">
+            <div id="content">
+                {% block navbar %}
                     {% include "front/block/_navbar.html.twig" %}
-                </div>
+                {% endblock %}
+
+                {% block content %}
+                    {% block banner%}{% endblock %}
+                {% endblock %}
+
+                {% block footer %}
+                    {% include "front/block/_footer.html.twig" %}
+                {% endblock %}
             </div>
-        {% endblock %}
-
-        {% block content %}
-            {% block banner%}{% endblock %}
-        {% endblock %}
-
-        {% block footer %}
-            {% include "front/block/_footer.html.twig" %}
-        {% endblock %}
+        </div>
 
         {% block javascripts %}
             {{ encore_entry_script_tags('front_app') }}

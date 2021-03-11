@@ -62,11 +62,6 @@ class Article
     private $author;
 
     /**
-     * @ORM\ManyToMany(targetEntity=ArticleCategory::class, inversedBy="articles", cascade={"persist", "remove"})
-     */
-    private $categories;
-
-    /**
      * @ORM\Column(type="string", length=256, nullable=true)
      */
     private $croppedImageName;
@@ -76,14 +71,44 @@ class Article
      */
     private $croppedImageThumbnailName;
 
+    /**
+     * @ORM\OneToMany(targetEntity=ArticlePositionCategory::class, mappedBy="article", cascade={"persist", "remove"}, orphanRemoval=true)
+     * @ORM\OrderBy({"positionCategory" = "ASC"})
+     */
+    private $positionCategories;
+
     public function __construct()
     {
-        $this->categories = new ArrayCollection();
+        $this->positionCategories = new ArrayCollection();
     }
 
     public function __toString()
     {
         return $this->title;
+    }
+
+    public function getCategories()
+    {
+        $categories = [];
+        foreach ($this->getPositionCategories() as $positionCategory) {
+            $categories[] = $positionCategory->getCategory();
+        }
+
+        return $categories;
+    }
+
+    public function removeCategory($category)
+    {
+        foreach ($this->getPositionCategories() as $positionCategory) {
+            if ($category === $positionCategory->getCategory()) {
+                $this->removePositionCategory($positionCategory);
+                $positionCategory->getCategory()->removePositionArticle($positionCategory);
+
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function computeSlug(SluggerInterface $slugger)
@@ -194,30 +219,6 @@ class Article
         return $this;
     }
 
-    /**
-     * @return Collection|ArticleCategory[]
-     */
-    public function getCategories(): Collection
-    {
-        return $this->categories;
-    }
-
-    public function addCategory(ArticleCategory $category): self
-    {
-        if (!$this->categories->contains($category)) {
-            $this->categories[] = $category;
-        }
-
-        return $this;
-    }
-
-    public function removeCategory(ArticleCategory $category): self
-    {
-        $this->categories->removeElement($category);
-
-        return $this;
-    }
-
     public function getCroppedImageName(): ?string
     {
         return $this->croppedImageName;
@@ -252,6 +253,36 @@ class Article
     public function setCroppedImageThumbnailName(?string $croppedImageThumbnailName): self
     {
         $this->croppedImageThumbnailName = $croppedImageThumbnailName;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|ArticlePositionCategory[]
+     */
+    public function getPositionCategories(): Collection
+    {
+        return $this->positionCategories;
+    }
+
+    public function addPositionCategory(ArticlePositionCategory $positionCategory): self
+    {
+        if (!$this->positionCategories->contains($positionCategory)) {
+            $this->positionCategories[] = $positionCategory;
+            $positionCategory->setArticle($this);
+        }
+
+        return $this;
+    }
+
+    public function removePositionCategory(ArticlePositionCategory $positionCategory): self
+    {
+        if ($this->positionCategories->removeElement($positionCategory)) {
+            // set the owning side to null (unless already changed)
+            if ($positionCategory->getArticle() === $this) {
+                $positionCategory->setArticle(null);
+            }
+        }
 
         return $this;
     }

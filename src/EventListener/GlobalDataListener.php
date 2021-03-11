@@ -23,6 +23,6 @@ class GlobalDataListener
     public function onKernelRequest(RequestEvent $event)
     {
         $this->environment->addGlobal('config', $this->configRepository->findOneByName('app')->get());
-        $this->environment->addGlobal('menu_categories', $this->articleCategoryRepository->findByDisplayedMenu(true));
+        $this->environment->addGlobal('menu_categories', $this->articleCategoryRepository->findMenuRoots());
     }
 }
